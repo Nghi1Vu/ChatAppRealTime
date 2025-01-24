@@ -17,23 +17,26 @@ using NRedisStack;
 using NRedisStack.RedisStackCommands;
 using StackExchange.Redis;
 using System.Diagnostics;
+using AdonisUI;
 
 namespace ChatAppRealTime
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : AdonisUI.Controls.AdonisWindow
     {
         public MainWindow()
         {
             InitializeComponent();
             try
             {
-                ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost:32769");
-                IDatabase db = redis.GetDatabase();
-                db.StringSet("foo", "bar");
-                Debug.WriteLine(db.StringGet("foo")); // prints bar
+                AdonisUI.ResourceLocator.SetColorScheme(Application.Current.Resources, ResourceLocator.LightColorScheme);
+
+                //ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost:32769");
+                //IDatabase db = redis.GetDatabase();
+                //db.StringSet("foo", "bar");
+                //Debug.WriteLine(db.StringGet("foo")); // prints bar
             }
             catch (Exception ex)
             {

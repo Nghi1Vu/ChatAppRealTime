@@ -12,4 +12,13 @@
     <PackageReference Include="NRedisStack" Version="0.13.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="AdonisUI">
+      <HintPath>..\adonis-ui\src\AdonisUI.ClassicTheme\bin\Debug\net5.0-windows\AdonisUI.dll</HintPath>
+    </Reference>
+    <Reference Include="AdonisUI.ClassicTheme">
+      <HintPath>..\adonis-ui\src\AdonisUI.ClassicTheme\bin\Debug\net5.0-windows\AdonisUI.ClassicTheme.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
