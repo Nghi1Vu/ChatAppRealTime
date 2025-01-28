@@ -48,11 +48,14 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Style="{StaticResource TitleText}" Grid.Row="0" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="Chat App ^^" FontSize="36" FontFamily="Times New Roman" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-        <TextBox Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Grid.ColumnSpan="1" Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="25" Margin="10,10,0,0"/>
-        <TextBox Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Grid.ColumnSpan="1" Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="25" Margin="10,50,0,0" TextChanged="TextBox_TextChanged"/>
-        <TextBlock  Style="{StaticResource TitleText}" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="Tài khoản:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" FontWeight="Bold" FontFamily="Times New Roman" FontSize="20"/>
-        <TextBlock Style="{StaticResource TitleText}" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="Mật khẩu:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,50,10,0" FontWeight="Bold" FontFamily="Times New Roman" FontSize="20"/>
-        <Button Grid.Row="2" Grid.ColumnSpan="2" Background="red" Foreground="Blue">Đăng nhập</Button>
+        <TextBlock Style="{StaticResource TitleText}" Grid.Row="0" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="Chat App" FontSize="36" FontFamily="Times New Roman" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Name="txtac" TextWrapping="Wrap" Grid.ColumnSpan="1" Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="25" Margin="10,10,0,0"/>
+        <PasswordBox Grid.Row="1" Grid.Column="1" Name="txtpw" Grid.ColumnSpan="1" Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="25" Margin="10,50,0,0" />
+        <PasswordBox Grid.Row="1" Grid.Column="1" Name="txtpwr" Grid.ColumnSpan="1" Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="25" Margin="10,90,0,0" />
+        <TextBlock  Style="{StaticResource TitleText}"  Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="Tài khoản:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" FontWeight="Bold" FontFamily="Times New Roman" FontSize="20"/>
+        <TextBlock Style="{StaticResource TitleText}"  Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="Mật khẩu:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,50,10,0" FontWeight="Bold" FontFamily="Times New Roman" FontSize="20"/>
+        <TextBlock Style="{StaticResource TitleText}" Name="lblpwr"  Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="Nhập lại mk:" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,90,10,0" FontWeight="Bold" FontFamily="Times New Roman" FontSize="20"/>
+        <Button Grid.Row="2" Name="btnLogin" Click="ButtonLogin_Click" Grid.ColumnSpan="1" Background="red" Foreground="Blue">Đăng nhập</Button>
+        <Button Grid.Row="2" Name="btnRegister" Click="ButtonRegister_Click" Grid.Column="2" Grid.ColumnSpan="1" Background="Blue" Foreground="red">Đăng ký</Button>
     </Grid>
     </adonisControls:AdonisWindow>

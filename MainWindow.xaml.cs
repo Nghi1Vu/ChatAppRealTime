@@ -24,30 +24,68 @@ namespace ChatAppRealTime
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
     public partial class MainWindow : AdonisUI.Controls.AdonisWindow
     {
-        public MainWindow()
+        private readonly BE.RedisServerIni RedisServerIni;
+        private bool isRegister;
+        public MainWindow(BE.RedisServerIni redisServerIni, bool isRegister = false)
         {
+            this.RedisServerIni = redisServerIni;
+            this.isRegister = isRegister;
             InitializeComponent();
+            if (this.isRegister)
+            {
+                btnLogin.IsEnabled = false;
+                btnLogin.Visibility = Visibility.Hidden;
+                btnRegister.SetValue(Grid.ColumnProperty, 0);
+                btnRegister.SetValue(Grid.ColumnSpanProperty, 2);
+                txtpwr.Visibility = Visibility.Visible;
+                lblpwr.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                txtpwr.Visibility = Visibility.Hidden;
+                lblpwr.Visibility = Visibility.Hidden;
+            }
             try
             {
                 AdonisUI.ResourceLocator.SetColorScheme(Application.Current.Resources, ResourceLocator.LightColorScheme);
-
-                //ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost:32769");
-                //IDatabase db = redis.GetDatabase();
-                //db.StringSet("foo", "bar");
-                //Debug.WriteLine(db.StringGet("foo")); // prints bar
             }
             catch (Exception ex)
             {
 
             }
-
         }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void ButtonLogin_Click(object sender, RoutedEventArgs e)
+        {
+            bool login = RedisServerIni.Login(txtac.Text, txtpw.Password);
+            if (!login)
+            {
+                MessageBox.Show("Đăng nhập thất bại!");
+                return;
+            }
+            MessageBox.Show($"Đăng nhập thành công. Xin chào: " + txtac.Text);
+        }
+        private void ButtonRegister_Click(object sender, RoutedEventArgs e)
         {
 
+            if (this.isRegister)
+            {
+                bool register = RedisServerIni.Register(txtac.Text, txtpw.Password, txtpwr.Password);
+                if (!register)
+                {
+                    MessageBox.Show("Đăng ký thất bại!");
+                    return;
+                }
+                MessageBox.Show($"Đăng ký thành công. Xin chào: " + txtac.Text);
+                this.Close();
+            }
+            else
+            {
+                MainWindow main = new MainWindow(this.RedisServerIni, true);
+                main.ShowDialog();
+            }
         }
     }
 }
