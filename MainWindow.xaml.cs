@@ -66,13 +66,30 @@ namespace ChatAppRealTime
                 return;
             }
             MessageBox.Show($"Đăng nhập thành công. Xin chào: " + txtac.Text);
+            ListUsers lstusers = new ListUsers(this.RedisServerIni);
+            lstusers.Show();
+            this.Close();
         }
         private void ButtonRegister_Click(object sender, RoutedEventArgs e)
         {
 
             if (this.isRegister)
             {
-                bool register = RedisServerIni.Register(txtac.Text, txtpw.Password, txtpwr.Password);
+                bool ichk = Helper.Common.isMatch(txtpw.Password, txtpwr.Password);
+
+                if (!ichk)
+                {
+                    MessageBox.Show("Nhập lại mật khẩu không khớp!");
+                    return;
+                }
+                bool checkacc = RedisServerIni.CheckExistsAcc(txtac.Text);
+
+                if (checkacc)
+                {
+                    MessageBox.Show("Tài khoản đã tồn tại!");
+                    return;
+                }
+                bool register = RedisServerIni.Register(txtac.Text, txtpw.Password);
                 if (!register)
                 {
                     MessageBox.Show("Đăng ký thất bại!");

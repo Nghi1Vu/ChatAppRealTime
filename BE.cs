@@ -16,14 +16,14 @@ namespace ChatAppRealTime
         {
             private readonly ConnectionMultiplexer conn;
             private readonly IDatabase db;
+            public string currentusr;
             private string valkey;
             private string key
             {
                 get
                 {
                     valkey = Guid.NewGuid().ToString();
-
-                    while (db.KeyExists(key))
+                    while (db.KeyExists(valkey))
                     {
                         valkey = Guid.NewGuid().ToString();
                     };
@@ -35,7 +35,7 @@ namespace ChatAppRealTime
             }
             public RedisServerIni()
             {
-                conn = ConnectionMultiplexer.Connect("localhost:32770");
+                conn = ConnectionMultiplexer.Connect("localhost:32769");
                 db = conn.GetDatabase();
                 RedisBuilder();
             }
@@ -59,8 +59,29 @@ namespace ChatAppRealTime
                 {
 
                 }
-        
+
                 //end tbl user
+                //tbl message
+                schema = new Schema()
+         .AddTextField(new FieldName("$.from", "from"))
+         .AddTextField(new FieldName("$.to", "to"))
+         .AddTextField(new FieldName("$.body", "body"));
+                try
+                {
+                    bool indexCreated = db.FT().Create(
+            "idx:messages",
+            new FTCreateParams()
+                .On(IndexDataType.JSON)
+                .Prefix("message:"),
+            schema
+        );
+                }
+                catch
+                {
+
+                }
+
+                //end tbl message
             }
             public bool Login(string username, string password)
             {
@@ -70,25 +91,43 @@ namespace ChatAppRealTime
                             new Query($"@username:{username} @password:{password}")
                         );
                 var data = findPaulResult.Documents.Select(x => x["json"]);
-                
+                currentusr = data.Any() ? username : "";
                 return data.Any();
             }
-            public bool Register(string username, string password, string pwrepeat)
-            {
-                bool ichk = Helper.Common.isMatch(password, pwrepeat);
 
-                if (!ichk)
-                {
-                    return false;
-                }
+            public bool Register(string username, string password)
+            {
                 var user1 = new
                 {
                     username = username,
                     password = password
                 };
-                bool user1Set = db.JSON().Set($"user:{valkey}", "$", user1);
+                bool user1Set = db.JSON().Set($"user:{key}", "$", user1);
 
                 return user1Set;
+            }
+            public bool CheckExistsAcc(string username)
+            {
+
+                SearchResult findPaulResult = db.FT().Search(
+                            "idx:users",
+                            new Query($"@username:{username}")
+                        );
+                var data = findPaulResult.Documents.Select(x => x["json"]);
+
+                return data.Any();
+            }
+            public IEnumerable<RedisValue> GetAllUsers()
+            {
+                SearchResult findPaulResult = db.FT().Search(
+                             "idx:users", new Query());
+                var data = findPaulResult.Documents.Select(x => x["json"]);
+
+                return data;
+            }
+            public bool SaveMessage(string form, string to, string body)
+            {
+                return true;
             }
         }
     }
