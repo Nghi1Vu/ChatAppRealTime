@@ -1,4 +1,5 @@
-﻿using StackExchange.Redis;
+﻿using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,8 @@ namespace ChatAppRealTime
             InitializeComponent();
             this.RedisServerIni.Subscriber(new Action<RedisValue>((x) =>
             {
-                this.Dispatcher.Invoke(()=> txtreply.Text = x.ToString());
+                var obj=JsonConvert.DeserializeObject<dynamic>(x);
+                this.Dispatcher.Invoke(()=> txtreply.Text = obj?.message);
             }));
         }
 

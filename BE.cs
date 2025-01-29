@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows.Controls;
+using Newtonsoft.Json;
 
 namespace ChatAppRealTime
 {
@@ -134,7 +135,7 @@ namespace ChatAppRealTime
                 {
                     from = from,
                     date = DateTime.Now,
-                    message=message
+                    message = message
                 };
                 bool chatroomSet = db.JSON().Set($"chatroom:{key}", "$", chatroom);
 
@@ -143,7 +144,12 @@ namespace ChatAppRealTime
             public bool Publish(string message)
             {
                 string chatRoom = "chatroom_123";
-                sub.Publish(chatRoom, message);
+                var json = JsonConvert.SerializeObject(new
+                {
+                    message = message,
+                    currentusr = currentusr
+                });
+                sub.Publish(chatRoom, json);
                 SaveMessage(currentusr, message);
                 return true;
             }
