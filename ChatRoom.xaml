@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="ChatRoom" Height="450" Width="800">
     <Grid>
+        <TextBox x:Name="txtreply" HorizontalAlignment="Left" Margin="21,300,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="692" Height="63"/>
         <TextBox x:Name="txtchat" HorizontalAlignment="Left" Margin="21,361,0,0" TextWrapping="Wrap" Text="Bắt đầu trò chuyện..." VerticalAlignment="Top" Width="692" Height="63"/>
         <Button Click="btnsend_Click" Name="btnsend" HorizontalAlignment="Left" Margin="718,361,0,0" VerticalAlignment="Top" Height="63" Width="72">
             Gửi &#8594;

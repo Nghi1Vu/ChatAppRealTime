@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
+using System.Windows.Controls;
 
 namespace ChatAppRealTime
 {
@@ -18,6 +20,7 @@ namespace ChatAppRealTime
             private readonly IDatabase db;
             public string currentusr;
             private string valkey;
+            private ISubscriber sub => conn.GetSubscriber();
             private string key
             {
                 get
@@ -64,8 +67,8 @@ namespace ChatAppRealTime
                 //tbl message
                 schema = new Schema()
          .AddTextField(new FieldName("$.from", "from"))
-         .AddTextField(new FieldName("$.to", "to"))
-         .AddTextField(new FieldName("$.body", "body"));
+         .AddTextField(new FieldName("$.date", "date"))
+         .AddTextField(new FieldName("$.message", "message"));
                 try
                 {
                     bool indexCreated = db.FT().Create(
@@ -125,9 +128,32 @@ namespace ChatAppRealTime
 
                 return data;
             }
-            public bool SaveMessage(string form, string to, string body)
+            public bool SaveMessage(string from, string message)
             {
+                var chatroom = new
+                {
+                    from = from,
+                    date = DateTime.Now,
+                    message=message
+                };
+                bool chatroomSet = db.JSON().Set($"chatroom:{key}", "$", chatroom);
+
+                return chatroomSet;
+            }
+            public bool Publish(string message)
+            {
+                string chatRoom = "chatroom_123";
+                sub.Publish(chatRoom, message);
+                SaveMessage(currentusr, message);
                 return true;
+            }
+            public void Subscriber(Action<RedisValue> action)
+            {
+                sub.Subscribe("chatroom_123", (channel, message) =>
+                {
+                    action(message);
+                    // Cập nhật UI (có thể sử dụng Dispatcher.Invoke để cập nhật UI trên thread chính)
+                });
             }
         }
     }

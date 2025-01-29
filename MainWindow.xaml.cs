@@ -66,8 +66,8 @@ namespace ChatAppRealTime
                 return;
             }
             MessageBox.Show($"Đăng nhập thành công. Xin chào: " + txtac.Text);
-            ListUsers lstusers = new ListUsers(this.RedisServerIni);
-            lstusers.Show();
+            ChatRoom room = new ChatRoom(this.RedisServerIni);
+            room.Show();
             this.Close();
         }
         private void ButtonRegister_Click(object sender, RoutedEventArgs e)

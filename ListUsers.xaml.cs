@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -53,18 +54,17 @@ namespace ChatAppRealTime
                 uIElementInfo.SetValue(Grid.ColumnProperty, 1);
                 uIElementInfo.SetValue(Grid.RowProperty, row);
                 uIElementInfo.SetValue(Button.ContentProperty, item.username);
-                EventRoute eventRoute = new EventRoute(Button.ClickEvent);
-                RoutedEventArgs routedEventArgs = new RoutedEventArgs(Button.ClickEvent, btnsend_Click);
-                uIElementInfo.AddToEventRoute(eventRoute, routedEventArgs);
+                uIElementInfo.AddHandler(Button.ClickEvent,new RoutedEventHandler(btnsend_Click));
                 //end
                 row++;
                 grdLstUsers.Children.Add(uIElementImg);
                 grdLstUsers.Children.Add(uIElementInfo);
             }
-        }
-        private void btnsend_Click()
-        {
+        }	
 
+        private void btnsend_Click(object sender, RoutedEventArgs e)
+        {
+         
         }
     }
 }

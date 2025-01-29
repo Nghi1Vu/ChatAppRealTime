@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,11 +26,15 @@ namespace ChatAppRealTime
         {
             this.RedisServerIni= redisServerIni; 
             InitializeComponent();
+            this.RedisServerIni.Subscriber(new Action<RedisValue>((x) =>
+            {
+                this.Dispatcher.Invoke(()=> txtreply.Text = x.ToString());
+            }));
         }
 
         private void btnsend_Click(object sender, RoutedEventArgs e)
         {
-
+            this.RedisServerIni.Publish(txtchat.Text);
         }
     }
 }
