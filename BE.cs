@@ -22,20 +22,18 @@ namespace ChatAppRealTime
             public string currentusr;
             private string valkey;
             private ISubscriber sub => conn.GetSubscriber();
-            private string key
+            private string this[string name]
             {
                 get
                 {
                     valkey = Guid.NewGuid().ToString();
-                    while (db.KeyExists(valkey))
+                    while (db.KeyExists(name + valkey))
                     {
                         valkey = Guid.NewGuid().ToString();
                     };
                     return valkey;
                 }
-                set
-                {
-                }
+
             }
             public RedisServerIni()
             {
@@ -106,14 +104,14 @@ namespace ChatAppRealTime
                     username = username,
                     password = password
                 };
-                bool user1Set = db.JSON().Set($"user:{key}", "$", user1);
+                bool user1Set = db.JSON().Set($"user:{this["user:"]}", "$", user1);
 
                 return user1Set;
             }
             public IEnumerable<RedisValue> FTSearch(string name, string query)
             {
                 SearchResult findPaulResult = db.FT().Search(
-                             name, query != "" ? new Query(query) : new Query());
+                             name, query != "" ? (new Query(query)).Limit(0, 1000000) : (new Query()).Limit(0, 1000000));
                 var data = findPaulResult.Documents.Select(x => x["json"]);
 
                 return data;
@@ -126,7 +124,7 @@ namespace ChatAppRealTime
                     date = DateTime.Now,
                     message = message
                 };
-                bool chatroomSet = db.JSON().Set($"message:{key}", "$", chatroom);
+                bool chatroomSet = db.JSON().Set($"message:{this["message:"]}", "$", chatroom);
 
                 return chatroomSet;
             }
@@ -136,7 +134,8 @@ namespace ChatAppRealTime
                 var json = JsonConvert.SerializeObject(new
                 {
                     message = message,
-                    currentusr = currentusr
+                    date = DateTime.Now,
+                    from = currentusr
                 });
                 sub.Publish(chatRoom, json);
                 SaveMessage(currentusr, message);

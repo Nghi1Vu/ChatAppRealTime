@@ -15,22 +15,22 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="0.1*"/>
         </Grid.RowDefinitions>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+        <ScrollViewer Name="sclchat" VerticalScrollBarVisibility="Auto" >
 
             <Grid x:Name="grdchat" Grid.Row="0" Grid.Column="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.3*"/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="0.1*"/>
+                    <ColumnDefinition Width="0.5*"/>
                     <ColumnDefinition Width="0.3*"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <TextBox Grid.Row="1" x:Name="txtchat" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" MouseDown="txtchat_MouseDown" Text="Bắt đầu trò chuyện..." VerticalAlignment="Top" Width="640" Height="35"/>
+        <TextBox Grid.Row="1" x:Name="txtchat" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" LostFocus="txtchat_LostFocus" Text="Bắt đầu trò chuyện.." GotFocus="txtchat_GotFocus" VerticalAlignment="Top" Width="640" Height="35"/>
         <Button Grid.Row="1" Click="btnsend_Click" Grid.Column="1" Name="btnsend" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Background="red" Height="35">
             Gửi &#8594;
         </Button>
-
+        <TextBlock Grid.Row="0" Grid.Column="1">Đang hoạt động...</TextBlock>
     </Grid>
 </Window>
