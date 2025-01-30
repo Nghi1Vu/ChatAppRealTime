@@ -30,7 +30,7 @@ namespace ChatAppRealTime
         {
             this.RedisServerIni = redisServerIni;
             InitializeComponent();
-            var lstusers = this.RedisServerIni.GetAllUsers();
+            var lstusers = this.RedisServerIni.FTSearch("idx:users","");
             GridLength colWidthLeft = new GridLength(0.5, GridUnitType.Star);
             GridLength colWidthRight = new GridLength(1, GridUnitType.Star);
             grdLstUsers.ColumnDefinitions.Add(new ColumnDefinition() { Width = colWidthLeft });

@@ -13,5 +13,11 @@ namespace ChatAppRealTime
             public string username { get; set; }
             public string password { get; set; }
         }
+        public class ChatroomModel
+        {
+            public string from { get; set; }
+            public string date { get; set; }
+            public string message { get; set; }
+        }
     }
 }

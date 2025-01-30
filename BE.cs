@@ -39,7 +39,7 @@ namespace ChatAppRealTime
             }
             public RedisServerIni()
             {
-                conn = ConnectionMultiplexer.Connect("localhost:32769");
+                conn = ConnectionMultiplexer.Connect("localhost:32768");
                 db = conn.GetDatabase();
                 RedisBuilder();
             }
@@ -110,21 +110,10 @@ namespace ChatAppRealTime
 
                 return user1Set;
             }
-            public bool CheckExistsAcc(string username)
-            {
-
-                SearchResult findPaulResult = db.FT().Search(
-                            "idx:users",
-                            new Query($"@username:{username}")
-                        );
-                var data = findPaulResult.Documents.Select(x => x["json"]);
-
-                return data.Any();
-            }
-            public IEnumerable<RedisValue> GetAllUsers()
+            public IEnumerable<RedisValue> FTSearch(string name, string query)
             {
                 SearchResult findPaulResult = db.FT().Search(
-                             "idx:users", new Query());
+                             name, query != "" ? new Query(query) : new Query());
                 var data = findPaulResult.Documents.Select(x => x["json"]);
 
                 return data;
@@ -137,7 +126,7 @@ namespace ChatAppRealTime
                     date = DateTime.Now,
                     message = message
                 };
-                bool chatroomSet = db.JSON().Set($"chatroom:{key}", "$", chatroom);
+                bool chatroomSet = db.JSON().Set($"message:{key}", "$", chatroom);
 
                 return chatroomSet;
             }

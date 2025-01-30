@@ -7,9 +7,28 @@
         mc:Ignorable="d"
         Title="ChatRoom" Height="450" Width="800">
     <Grid>
-        <TextBox x:Name="txtreply" HorizontalAlignment="Left" Margin="21,300,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="692" Height="63"/>
-        <TextBox x:Name="txtchat" HorizontalAlignment="Left" Margin="21,361,0,0" TextWrapping="Wrap" Text="Bắt đầu trò chuyện..." VerticalAlignment="Top" Width="692" Height="63"/>
-        <Button Click="btnsend_Click" Name="btnsend" HorizontalAlignment="Left" Margin="718,361,0,0" VerticalAlignment="Top" Height="63" Width="72">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.1*"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+
+            <Grid x:Name="grdchat" Grid.Row="0" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.3*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0.1*"/>
+                    <ColumnDefinition Width="0.3*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </ScrollViewer>
+        <TextBox Grid.Row="1" x:Name="txtchat" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" MouseDown="txtchat_MouseDown" Text="Bắt đầu trò chuyện..." VerticalAlignment="Top" Width="640" Height="35"/>
+        <Button Grid.Row="1" Click="btnsend_Click" Grid.Column="1" Name="btnsend" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Background="red" Height="35">
             Gửi &#8594;
         </Button>
 

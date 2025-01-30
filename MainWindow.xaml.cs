@@ -82,7 +82,7 @@ namespace ChatAppRealTime
                     MessageBox.Show("Nhập lại mật khẩu không khớp!");
                     return;
                 }
-                bool checkacc = RedisServerIni.CheckExistsAcc(txtac.Text);
+                bool checkacc = RedisServerIni.FTSearch("idx:users",$"@username:{txtac.Text}").Any();
 
                 if (checkacc)
                 {
