@@ -43,7 +43,7 @@ namespace ChatAppRealTime
             }
             public void RedisBuilder()
             {
-                //tbl user
+                //user
                 var schema = new Schema()
          .AddTextField(new FieldName("$.username", "username"))
          .AddTextField(new FieldName("$.password", "password"));
@@ -62,8 +62,8 @@ namespace ChatAppRealTime
 
                 }
 
-                //end tbl user
-                //tbl message
+                //end user
+                // message
                 schema = new Schema()
          .AddTextField(new FieldName("$.from", "from"))
          .AddTextField(new FieldName("$.date", "date"))
@@ -83,7 +83,7 @@ namespace ChatAppRealTime
 
                 }
 
-                //end tbl message
+                //end message
             }
             public bool Login(string username, string password)
             {
@@ -95,6 +95,26 @@ namespace ChatAppRealTime
                 var data = findPaulResult.Documents.Select(x => x["json"]);
                 currentusr = data.Any() ? username : "";
                 return data.Any();
+            }
+            public async Task Heartbeat(string user)
+            {
+
+                db.StringSet($"user_status:{user}", "online", TimeSpan.FromSeconds(30));
+            }
+            public void HeartbeatTTL()
+            {
+
+                sub.Subscribe("__keyevent@0__:expired", (channel, message) =>
+                {
+                    string key = message.ToString();
+
+                    // Chỉ xử lý key liên quan đến trạng thái user
+                    if (key.StartsWith("user_status:"))
+                    {
+                        string userId = key.Replace("user_status:", "");
+
+                    }
+                });
             }
 
             public bool Register(string username, string password)

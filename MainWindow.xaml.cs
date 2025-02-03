@@ -18,6 +18,7 @@ using NRedisStack.RedisStackCommands;
 using StackExchange.Redis;
 using System.Diagnostics;
 using AdonisUI;
+using System.Timers;
 
 namespace ChatAppRealTime
 {
@@ -29,6 +30,7 @@ namespace ChatAppRealTime
     {
         private readonly BE.RedisServerIni RedisServerIni;
         private bool isRegister;
+        private Timer _timer;
         public MainWindow(BE.RedisServerIni redisServerIni, bool isRegister = false)
         {
             this.RedisServerIni = redisServerIni;
@@ -57,7 +59,7 @@ namespace ChatAppRealTime
 
             }
         }
-        private void ButtonLogin_Click(object sender, RoutedEventArgs e)
+        private async void ButtonLogin_Click(object sender, RoutedEventArgs e)
         {
             bool login = RedisServerIni.Login(txtac.Text, txtpw.Password);
             if (!login)
@@ -66,6 +68,13 @@ namespace ChatAppRealTime
                 return;
             }
             MessageBox.Show($"Đăng nhập thành công. Xin chào: " + txtac.Text);
+            //heartbeat
+            _timer = new Timer(30000); // Gửi heartbeat mỗi 10 giây
+            _timer.Elapsed += async (sender, e) => await RedisServerIni.Heartbeat(RedisServerIni.currentusr);
+            _timer.AutoReset = true;
+            _timer.Start();
+            RedisServerIni.HeartbeatTTL();
+            //end
             ChatRoom room = new ChatRoom(this.RedisServerIni);
             room.Show();
             this.Close();
@@ -82,7 +91,7 @@ namespace ChatAppRealTime
                     MessageBox.Show("Nhập lại mật khẩu không khớp!");
                     return;
                 }
-                bool checkacc = RedisServerIni.FTSearch("idx:users",$"@username:{txtac.Text}").Any();
+                bool checkacc = RedisServerIni.FTSearch("idx:users", $"@username:{txtac.Text}").Any();
 
                 if (checkacc)
                 {
