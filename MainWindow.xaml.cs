@@ -69,11 +69,21 @@ namespace ChatAppRealTime
             }
             MessageBox.Show($"Đăng nhập thành công. Xin chào: " + txtac.Text);
             //heartbeat
-            _timer = new Timer(30000); // Gửi heartbeat mỗi 10 giây
-            _timer.Elapsed += async (sender, e) => await RedisServerIni.Heartbeat(RedisServerIni.currentusr);
+            _timer = new Timer(10000); // Gửi heartbeat mỗi 10 giây
+            _timer.Elapsed += async (sender, e) => await RedisServerIni.Heartbeat(RedisServerIni.currentusr, new Action(() => { this.Dispatcher.Invoke(() => { MessageBox.Show(RedisServerIni.currentusr); }); }));
             _timer.AutoReset = true;
             _timer.Start();
-            RedisServerIni.HeartbeatTTL();
+            RedisServerIni.HeartbeatTTL(new Action<string>((message) =>
+            {
+                string key = message.ToString();
+
+                // Chỉ xử lý key liên quan đến trạng thái user
+                if (key.StartsWith("user_status:"))
+                {
+                    string userId = key.Replace("user_status:", "");
+                    this.Dispatcher.Invoke(() => { MessageBox.Show(userId); });
+                }
+            }));
             //end
             ChatRoom room = new ChatRoom(this.RedisServerIni);
             room.Show();

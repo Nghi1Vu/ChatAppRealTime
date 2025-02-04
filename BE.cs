@@ -96,24 +96,18 @@ namespace ChatAppRealTime
                 currentusr = data.Any() ? username : "";
                 return data.Any();
             }
-            public async Task Heartbeat(string user)
+            public async Task Heartbeat(string user,Action action)
             {
-
-                db.StringSet($"user_status:{user}", "online", TimeSpan.FromSeconds(30));
+                action();
+                db.StringSet($"user_status:{user}", "online", TimeSpan.FromSeconds(10));
             }
-            public void HeartbeatTTL()
+            public void HeartbeatTTL(Action<string> action)
             {
 
                 sub.Subscribe("__keyevent@0__:expired", (channel, message) =>
                 {
-                    string key = message.ToString();
-
-                    // Chỉ xử lý key liên quan đến trạng thái user
-                    if (key.StartsWith("user_status:"))
-                    {
-                        string userId = key.Replace("user_status:", "");
-
-                    }
+                    action(message);
+                   
                 });
             }
 
