@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
@@ -12,19 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AdonisUI" Version="1.17.1" />
+    <PackageReference Include="AdonisUI.ClassicTheme" Version="1.17.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NPOI" Version="2.7.2" />
     <PackageReference Include="NRedisStack" Version="0.13.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="AdonisUI">
-      <HintPath>..\adonis-ui\src\AdonisUI.ClassicTheme\bin\Debug\net5.0-windows\AdonisUI.dll</HintPath>
-    </Reference>
-    <Reference Include="AdonisUI.ClassicTheme">
-      <HintPath>..\adonis-ui\src\AdonisUI.ClassicTheme\bin\Debug\net5.0-windows\AdonisUI.ClassicTheme.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

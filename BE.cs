@@ -37,7 +37,7 @@ namespace ChatAppRealTime
             }
             public RedisServerIni()
             {
-                conn = ConnectionMultiplexer.Connect("localhost:32768");
+                conn = ConnectionMultiplexer.Connect("localhost:32769");
                 db = conn.GetDatabase();
                 RedisBuilder();
             }
@@ -96,18 +96,29 @@ namespace ChatAppRealTime
                 currentusr = data.Any() ? username : "";
                 return data.Any();
             }
-            public async Task Heartbeat(string user,Action action)
+            public async Task<bool> GetOnlineByUser(string user)
             {
-                action();
-                db.StringSet($"user_status:{user}", "online", TimeSpan.FromSeconds(10));
+                return await Task.Run(() => db.StringGet($"user_status:{user}") == "online");
+            }
+            public async Task Heartbeat(string user)
+            {
+                if (db.StringSet($"user_status:{user}", "online", TimeSpan.FromSeconds(20)))
+                {
+                    await Task.Run(() => db.Publish("HeartbeatTTL", user));
+                }
             }
             public void HeartbeatTTL(Action<string> action)
             {
 
+                sub.Subscribe("HeartbeatTTL", (channel, message) =>
+                {
+                    action("user_login:" + message);
+
+                });
                 sub.Subscribe("__keyevent@0__:expired", (channel, message) =>
                 {
                     action(message);
-                   
+
                 });
             }
 
@@ -125,7 +136,7 @@ namespace ChatAppRealTime
             public IEnumerable<RedisValue> FTSearch(string name, string query)
             {
                 SearchResult findPaulResult = db.FT().Search(
-                             name, query != "" ? (new Query(query)).Limit(0, 1000000) : (new Query()).Limit(0, 1000000));
+                             name, query != "" ? (new Query(query)).Limit(0, 10000) : (new Query()).Limit(0, 10000));
                 var data = findPaulResult.Documents.Select(x => x["json"]);
 
                 return data;

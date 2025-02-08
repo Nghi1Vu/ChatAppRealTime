@@ -4,6 +4,7 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,12 +25,38 @@ namespace ChatAppRealTime
     public partial class ChatRoom : Window
     {
         private readonly BE.RedisServerIni RedisServerIni;
+        private List<string> lstonline;
 
         public ChatRoom(BE.RedisServerIni redisServerIni)
         {
             this.RedisServerIni = redisServerIni;
             InitializeComponent();
             ldChatRoom();
+            lstonline = ldlstOnline().Result;
+            RedisServerIni.HeartbeatTTL(new Action<string>(async (message) =>
+            {
+                string key = message.ToString();
+
+                // Chỉ xử lý key liên quan đến trạng thái user
+                if (key.StartsWith("user_status:"))
+                {
+                    string userId = key.Replace("user_status:", "");
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        if (lstonline.Contains(userId))
+                            lstonl.Items.Remove(userId);
+                    });
+                }
+                if (key.StartsWith("user_login:"))
+                {
+                    string userId = key.Replace("user_login:", "");
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        if (!lstonline.Contains(userId))
+                            lstonl.Items.Add(userId);
+                    });
+                }
+            }));
             this.RedisServerIni.Subscriber(new Action<RedisValue>((x) =>
             {
 
@@ -89,12 +116,32 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
                 date = JsonConvert.DeserializeObject<ChatroomModel>(x.ToString()).date,
                 message = JsonConvert.DeserializeObject<ChatroomModel>(x.ToString()).message
             });
-            data= data.OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
+            data = data.OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
             foreach (var item in data)
             {
                 createGrdChat(ref row, item);
             }
             sclchat.ScrollToEnd();
+        }
+        private async Task<List<string>> ldlstOnline()
+        {
+            List<string> strings = new List<string>();
+            var lstonline = this.RedisServerIni.FTSearch("idx:users", "");
+            var data = lstonline.Select(x => new AccountInfo()
+            {
+                username = JsonConvert.DeserializeObject<AccountInfo>(x.ToString()).username,
+                password = JsonConvert.DeserializeObject<AccountInfo>(x.ToString()).password
+            });
+            foreach (var item in data)
+            {
+                bool chk = await this.RedisServerIni.GetOnlineByUser(item.username);
+                if (chk)
+                {
+                    lstonl.Items.Add(item.username);
+                    strings.Add(item.username);
+                }
+            }
+            return strings;
         }
         private void btnsend_Click(object sender, RoutedEventArgs e)
         {

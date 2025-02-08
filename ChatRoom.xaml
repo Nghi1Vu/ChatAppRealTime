@@ -32,5 +32,10 @@
             Gửi &#8594;
         </Button>
         <TextBlock Grid.Row="0" Grid.Column="1">Đang hoạt động...</TextBlock>
+        <ScrollViewer Margin="0 15 0 0" Grid.Row="0" Grid.Column="1" x:Name="sclonl" VerticalScrollBarVisibility="Auto" >
+
+            <ListBox x:Name="lstonl" Margin="0 15 0 0" Grid.Row="0" Grid.Column="1">
+            </ListBox>
+        </ScrollViewer>
     </Grid>
 </Window>
