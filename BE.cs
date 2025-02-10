@@ -37,7 +37,7 @@ namespace ChatAppRealTime
             }
             public RedisServerIni()
             {
-                conn = ConnectionMultiplexer.Connect("localhost:32769");
+                conn = ConnectionMultiplexer.Connect("localhost:32768");
                 db = conn.GetDatabase();
                 RedisBuilder();
             }
@@ -98,13 +98,13 @@ namespace ChatAppRealTime
             }
             public async Task<bool> GetOnlineByUser(string user)
             {
-                return await Task.Run(() => db.StringGet($"user_status:{user}") == "online");
+                return db.StringGet($"user_status:{user}") == "online";
             }
             public async Task Heartbeat(string user)
             {
-                if (db.StringSet($"user_status:{user}", "online", TimeSpan.FromSeconds(20)))
+                if (db.StringSet($"user_status:{user}", "online", TimeSpan.FromMinutes(1.15)))
                 {
-                    await Task.Run(() => db.Publish("HeartbeatTTL", user));
+                    db.Publish("HeartbeatTTL", user);
                 }
             }
             public void HeartbeatTTL(Action<string> action)

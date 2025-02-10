@@ -44,7 +44,10 @@ namespace ChatAppRealTime
                     this.Dispatcher.Invoke(() =>
                     {
                         if (lstonline.Contains(userId))
+                        {
                             lstonl.Items.Remove(userId);
+                            lstonline.Remove(userId);
+                        }
                     });
                 }
                 if (key.StartsWith("user_login:"))
@@ -53,7 +56,10 @@ namespace ChatAppRealTime
                     this.Dispatcher.Invoke(() =>
                     {
                         if (!lstonline.Contains(userId))
+                        {
                             lstonl.Items.Add(userId);
+                            lstonline.Add(userId);
+                        }
                     });
                 }
             }));

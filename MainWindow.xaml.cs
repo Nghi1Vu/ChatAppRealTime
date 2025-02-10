@@ -69,15 +69,16 @@ namespace ChatAppRealTime
                 return;
             }
             MessageBox.Show($"Đăng nhập thành công. Xin chào: " + txtac.Text);
-            ChatRoom room = new ChatRoom(this.RedisServerIni);
-            room.Show();
-            this.Close();
+
             await RedisServerIni.Heartbeat(RedisServerIni.currentusr);
             //heartbeat
-            _timer = new Timer(15000); // Gửi heartbeat mỗi 10 giây
+            _timer = new Timer(60000); // Gửi heartbeat mỗi 10 giây
             _timer.Elapsed += async (sender, e) => await RedisServerIni.Heartbeat(RedisServerIni.currentusr);
             _timer.AutoReset = true;
             _timer.Start();
+            ChatRoom room = new ChatRoom(this.RedisServerIni);
+            room.Show();
+            this.Close();
 
             //end
 
