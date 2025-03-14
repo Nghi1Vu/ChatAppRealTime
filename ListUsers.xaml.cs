@@ -19,52 +19,52 @@ using static ChatAppRealTime.Model;
 
 namespace ChatAppRealTime
 {
-    /// <summary>
-    /// Interaction logic for ListUsers.xaml
-    /// </summary>
-    public partial class ListUsers : Window
-    {
-        private readonly BE.RedisServerIni RedisServerIni;
+	/// <summary>
+	/// Interaction logic for ListUsers.xaml
+	/// </summary>
+	public partial class ListUsers : Window
+	{
 
-        public ListUsers(BE.RedisServerIni redisServerIni)
-        {
-            this.RedisServerIni = redisServerIni;
-            InitializeComponent();
-            var lstusers = this.RedisServerIni.FTSearch("idx:users","");
-            GridLength colWidthLeft = new GridLength(0.5, GridUnitType.Star);
-            GridLength colWidthRight = new GridLength(1, GridUnitType.Star);
-            grdLstUsers.ColumnDefinitions.Add(new ColumnDefinition() { Width = colWidthLeft });
-            grdLstUsers.ColumnDefinitions.Add(new ColumnDefinition() { Width = colWidthRight });
-            int row = 0;
-            var data = lstusers.Select(x=>new AccountInfo() { username=JsonConvert.DeserializeObject<AccountInfo>(x.ToString()).username,
-            password= JsonConvert.DeserializeObject<AccountInfo>(x.ToString()).password
-            }).Where(x => x.username != this.RedisServerIni.currentusr);
-            foreach (var item in data)
-            {
-                grdLstUsers.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto, MaxHeight = 200 });
-                //img element
-                Image uIElementImg = new Image();
-                uIElementImg.SetValue(Grid.ColumnProperty, 0);
-                uIElementImg.SetValue(Grid.RowProperty, row);
-                uIElementImg.Source = new BitmapImage(
-    new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
-                //end
-                //info element
-                Button uIElementInfo = new Button();
-                uIElementInfo.SetValue(Grid.ColumnProperty, 1);
-                uIElementInfo.SetValue(Grid.RowProperty, row);
-                uIElementInfo.SetValue(Button.ContentProperty, item.username);
-                uIElementInfo.AddHandler(Button.ClickEvent,new RoutedEventHandler(btnsend_Click));
-                //end
-                row++;
-                grdLstUsers.Children.Add(uIElementImg);
-                grdLstUsers.Children.Add(uIElementInfo);
-            }
-        }	
+		public ListUsers()
+		{
+			InitializeComponent();
+			var lstusers = Constant.RedisServerIni.FTSearch("idx:users", "");
+			GridLength colWidthLeft = new GridLength(0.5, GridUnitType.Star);
+			GridLength colWidthRight = new GridLength(1, GridUnitType.Star);
+			grdLstUsers.ColumnDefinitions.Add(new ColumnDefinition() { Width = colWidthLeft });
+			grdLstUsers.ColumnDefinitions.Add(new ColumnDefinition() { Width = colWidthRight });
+			int row = 0;
+			var data = lstusers.Select(x => new AccountInfo()
+			{
+				username = JsonConvert.DeserializeObject<AccountInfo>(x.ToString()).username,
+				password = JsonConvert.DeserializeObject<AccountInfo>(x.ToString()).password
+			});
+			foreach (var item in data)
+			{
+				grdLstUsers.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto, MaxHeight = 200 });
+				//img element
+				Image uIElementImg = new Image();
+				uIElementImg.SetValue(Grid.ColumnProperty, 0);
+				uIElementImg.SetValue(Grid.RowProperty, row);
+				uIElementImg.Source = new BitmapImage(
+	new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
+				//end
+				//info element
+				Button uIElementInfo = new Button();
+				uIElementInfo.SetValue(Grid.ColumnProperty, 1);
+				uIElementInfo.SetValue(Grid.RowProperty, row);
+				uIElementInfo.SetValue(Button.ContentProperty, item.username);
+				uIElementInfo.AddHandler(Button.ClickEvent, new RoutedEventHandler(btnsend_Click));
+				//end
+				row++;
+				grdLstUsers.Children.Add(uIElementImg);
+				grdLstUsers.Children.Add(uIElementInfo);
+			}
+		}
 
-        private void btnsend_Click(object sender, RoutedEventArgs e)
-        {
-         
-        }
-    }
+		private void btnsend_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+	}
 }

@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="ChatAppRealTime.Menu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ChatAppRealTime"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" >
+    <Grid>
+        <DockPanel LastChildFill="True">
+            <!-- Thanh Navbar -->
+            <StackPanel Margin="0 -340 0 0" DockPanel.Dock="Top" Orientation="Horizontal" Background="DarkBlue" Height="50">
+                <Button Click="Home_Click" Name="Home" Content="🏠 Trang chủ" Foreground="White" Background="Transparent" BorderThickness="0" Padding="10"/>
+                <Button Click="AIChat_Click" Content="👾 AI Chat" Name="AIChat" Foreground="White" Background="Transparent" BorderThickness="0" Padding="10"/>
+                <Button Click="Settings_Click" Content="⚙ Cài đặt" Name="Settings" Foreground="White" Background="Transparent" BorderThickness="0" Padding="10"/>
+                <ToggleButton x:Name="Theme"
+                      Content="☀️ Sáng/Tối"
+                      Checked="DarkModeToggle_Checked"
+                      Unchecked="DarkModeToggle_Unchecked"
+                      HorizontalAlignment="Center"  Foreground="White" Background="Transparent" BorderThickness="0" Padding="10"
+                      VerticalAlignment="Center"/>
+                <Button Click="UserList_Click" Content="👥 Người dùng" Name="UserList" Foreground="White" Background="Transparent" BorderThickness="0" Padding="10"/>
+
+            </StackPanel>
+
+        </DockPanel>
+    </Grid>
+</UserControl>

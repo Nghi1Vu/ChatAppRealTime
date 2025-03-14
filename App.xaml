@@ -1,8 +1,7 @@
 ﻿<Application xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI" x:Class="ChatAppRealTime.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ChatAppRealTime"
-             Startup="OnStartup">
+             xmlns:local="clr-namespace:ChatAppRealTime" StartupUri="MainWindow.xaml?isRegister=false">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

@@ -15,6 +15,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="0.1*"/>
         </Grid.RowDefinitions>
+        <local:Menu Panel.ZIndex="1000"/>
+
         <ScrollViewer Name="sclchat" VerticalScrollBarVisibility="Auto" >
 
             <Grid x:Name="grdchat" Grid.Row="0" Grid.Column="0">
@@ -27,7 +29,7 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <TextBox Grid.Row="1" x:Name="txtchat" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" LostFocus="txtchat_LostFocus" Text="Bắt đầu trò chuyện.." GotFocus="txtchat_GotFocus" VerticalAlignment="Top" Width="640" Height="35"/>
+        <TextBox x:Name="txtchat" HorizontalAlignment="Center" KeyUp="txtchat_KeyUp" TextWrapping="Wrap" LostFocus="txtchat_LostFocus" Text="Bắt đầu trò chuyện.." GotFocus="txtchat_GotFocus" VerticalAlignment="Center" Width="640" Height="35" Grid.Row="1"/>
         <Button Grid.Row="1" Click="btnsend_Click" Grid.Column="1" Name="btnsend" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Background="red" Height="35">
             Gửi &#8594;
         </Button>

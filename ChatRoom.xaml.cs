@@ -24,16 +24,13 @@ namespace ChatAppRealTime
     /// </summary>
     public partial class ChatRoom : Window
     {
-        private readonly BE.RedisServerIni RedisServerIni;
         private List<string> lstonline;
-
-        public ChatRoom(BE.RedisServerIni redisServerIni)
+        public ChatRoom()
         {
-            this.RedisServerIni = redisServerIni;
             InitializeComponent();
             ldChatRoom();
             lstonline = ldlstOnline().Result;
-            RedisServerIni.HeartbeatTTL(new Action<string>(async (message) =>
+			Constant.RedisServerIni.HeartbeatTTL(new Action<string>(async (message) =>
             {
                 string key = message.ToString();
 
@@ -63,7 +60,7 @@ namespace ChatAppRealTime
                     });
                 }
             }));
-            this.RedisServerIni.Subscriber(new Action<RedisValue>((x) =>
+            Constant.RedisServerIni.Subscriber(new Action<RedisValue>((x) =>
             {
 
                 this.Dispatcher.Invoke(() =>
@@ -82,13 +79,13 @@ namespace ChatAppRealTime
             grdchat.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto, MaxHeight = 100 });
             //img element
             Image uIElementImg = new Image();
-            uIElementImg.SetValue(Grid.ColumnProperty, item.from == this.RedisServerIni.currentusr ? 3 : 0);
+            uIElementImg.SetValue(Grid.ColumnProperty, item.from == Constant.RedisServerIni.currentusr ? 3 : 0);
             uIElementImg.SetValue(Grid.RowProperty, row);
             uIElementImg.SetValue(Image.HeightProperty, (double)50);
             uIElementImg.Source = new BitmapImage(
 new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
             TextBlock uIElementUsr = new TextBlock();
-            uIElementUsr.SetValue(Grid.ColumnProperty, item.from == this.RedisServerIni.currentusr ? 3 : 0);
+            uIElementUsr.SetValue(Grid.ColumnProperty, item.from == Constant.RedisServerIni.currentusr ? 3 : 0);
             uIElementUsr.SetValue(Grid.RowProperty, row);
             uIElementUsr.SetValue(TextBlock.TextProperty, item.from);
             uIElementUsr.SetValue(TextBlock.MarginProperty, new Thickness(5, 50, 0, 0));
@@ -102,7 +99,7 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
             //end
             //info element
             Button uIElementInfo = new Button();
-            uIElementInfo.SetValue(Grid.ColumnProperty, item.from == this.RedisServerIni.currentusr ? 4 : 1);
+            uIElementInfo.SetValue(Grid.ColumnProperty, item.from == Constant.RedisServerIni.currentusr ? 4 : 1);
             uIElementInfo.SetValue(Grid.RowProperty, row);
             uIElementInfo.SetValue(Button.ContentProperty, item.message);
             //end
@@ -114,7 +111,7 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
         }
         private void ldChatRoom()
         {
-            var messages = this.RedisServerIni.FTSearch("idx:messages", "");
+            var messages = Constant.RedisServerIni.FTSearch("idx:messages", "");
             int row = 0;
             var data = messages.Select(x => new ChatroomModel()
             {
@@ -132,7 +129,7 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
         private async Task<List<string>> ldlstOnline()
         {
             List<string> strings = new List<string>();
-            var lstonline = this.RedisServerIni.FTSearch("idx:users", "");
+            var lstonline = Constant.RedisServerIni.FTSearch("idx:users", "");
             var data = lstonline.Select(x => new AccountInfo()
             {
                 username = JsonConvert.DeserializeObject<AccountInfo>(x.ToString()).username,
@@ -140,7 +137,7 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
             });
             foreach (var item in data)
             {
-                bool chk = await this.RedisServerIni.GetOnlineByUser(item.username);
+                bool chk = await Constant.RedisServerIni.GetOnlineByUser(item.username);
                 if (chk)
                 {
                     lstonl.Items.Add(item.username);
@@ -151,12 +148,12 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
         }
         private void btnsend_Click(object sender, RoutedEventArgs e)
         {
-            this.RedisServerIni.Publish(txtchat.Text);
+            Constant.RedisServerIni.Publish(txtchat.Text);
         }
 
         private void txtchat_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (txtchat.Text.Trim() == "Bắt đầu trò chuyện..")
+            if (txtchat.Text.Trim() == "Nhấn để chat..")
             {
                 txtchat.Text = "";
             }
@@ -166,8 +163,17 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
         {
             if (txtchat.Text.Trim() == "")
             {
-                txtchat.Text = "Bắt đầu trò chuyện..";
+                txtchat.Text = "Nhấn để chat..";
             }
         }
-    }
+
+		private void txtchat_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (e.Key != System.Windows.Input.Key.Enter) return;
+			e.Handled = true;
+			Constant.RedisServerIni.Publish(txtchat.Text);
+            //MessageBox.Show("Enter pressed");
+            txtchat.Text = string.Empty;
+		}
+	}
 }
