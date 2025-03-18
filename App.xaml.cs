@@ -15,7 +15,7 @@ namespace ChatAppRealTime
     {
         public App()
         {
-            var redisServer=Constant.RedisServerIni;
+			var redisServer=Constant.RedisServerIni;
         }
 
 		private void Application_Startup(object sender, StartupEventArgs e)

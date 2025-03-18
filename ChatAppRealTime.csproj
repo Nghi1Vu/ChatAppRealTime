@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="img\chatbot.jpg" />
     <None Remove="img\OIP.jpg" />
   </ItemGroup>
 
@@ -20,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="img\chatbot.jpg">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
     <Resource Include="img\OIP.jpg" />
   </ItemGroup>
 

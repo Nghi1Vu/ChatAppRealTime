@@ -40,8 +40,7 @@ namespace ChatAppRealTime
 				conn = ConnectionMultiplexer.Connect(
 			new ConfigurationOptions
 			{
-				
-			}
+				}
 		);
 				db = conn.GetDatabase();
 				RedisBuilder();
@@ -89,6 +88,28 @@ namespace ChatAppRealTime
 				}
 
 				//end message
+				// message AI
+				schema = new Schema()
+		 .AddTextField(new FieldName("$.from", "from"))
+		 .AddTextField(new FieldName("$.date", "date"))
+		 .AddTextField(new FieldName("$.message", "message"))
+		 .AddNumericField(new FieldName("$.type", "type"));
+				try
+				{
+					bool indexCreated = db.FT().Create(
+			"idx:aihistories",
+			new FTCreateParams()
+				.On(IndexDataType.JSON)
+				.Prefix("aihistory:"),
+			schema
+		);
+				}
+				catch
+				{
+
+				}
+
+				//end message ai
 			}
 			public bool Login(string username, string password)
 			{
@@ -157,6 +178,27 @@ namespace ChatAppRealTime
 				bool chatroomSet = db.JSON().Set($"message:{this["message:"]}", "$", chatroom);
 
 				return chatroomSet;
+			}
+			public bool SaveMessageAi(string from, string message, string modelai, string messageai)
+			{
+				var chatUser = new
+				{
+					from = from,
+					date = DateTime.Now,
+					message = message,
+					type=1
+				};
+				var chatAi = new  //type ==1 user, type == 2 bot
+				{
+					from = modelai,
+					date = DateTime.Now,
+					message = messageai,
+					type=2
+				};
+				bool chatuserSet = db.JSON().Set($"aihistory:{this["aihistory:"]}", "$", chatUser);
+				bool chataiSet = db.JSON().Set($"aihistory:{this["aihistory:"]}", "$", chatAi);
+
+				return chatuserSet && chataiSet;
 			}
 			public bool Publish(string message)
 			{

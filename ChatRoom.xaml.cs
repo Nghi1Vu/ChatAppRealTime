@@ -22,8 +22,8 @@ namespace ChatAppRealTime
     /// <summary>
     /// Interaction logic for ChatRoom.xaml
     /// </summary>
-    public partial class ChatRoom : Window
-    {
+    public partial class ChatRoom : AdonisUI.Controls.AdonisWindow
+	{
         private List<string> lstonline;
         public ChatRoom()
         {
@@ -76,7 +76,7 @@ namespace ChatAppRealTime
         }
         private void createGrdChat(ref int row, ChatroomModel item)
         {
-            grdchat.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto, MaxHeight = 100 });
+            grdchat.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
             //img element
             Image uIElementImg = new Image();
             uIElementImg.SetValue(Grid.ColumnProperty, item.from == Constant.RedisServerIni.currentusr ? 3 : 0);
@@ -96,12 +96,15 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
             uIElementTime.SetValue(TextBlock.MarginProperty, new Thickness(0, 25, 0, 0));
             uIElementTime.SetValue(TextBlock.FontSizeProperty, (double)10);
             uIElementTime.SetValue(TextBlock.TextProperty, JsonConvert.DeserializeObject<DateTime>("\"" + item.date.Split(":")[0] + ":" + item.date.Split(":")[1] + "\"").ToString("dd/MM/yyyy hh:mm tt"));
-            //end
-            //info element
-            Button uIElementInfo = new Button();
+			//end
+			//info element
+			TextBlock uIElementInfo = new TextBlock();
             uIElementInfo.SetValue(Grid.ColumnProperty, item.from == Constant.RedisServerIni.currentusr ? 4 : 1);
             uIElementInfo.SetValue(Grid.RowProperty, row);
-            uIElementInfo.SetValue(Button.ContentProperty, item.message);
+			//uIElementInfo.Background = new SolidColorBrush(Colors.AliceBlue);
+			uIElementInfo.TextWrapping = TextWrapping.Wrap;
+			uIElementInfo.Padding = new Thickness(10);
+			uIElementInfo.SetValue(TextBlock.TextProperty, item.message);
             //end
             row++;
             grdchat.Children.Add(uIElementImg);
@@ -148,12 +151,22 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
         }
         private void btnsend_Click(object sender, RoutedEventArgs e)
         {
-            Constant.RedisServerIni.Publish(txtchat.Text);
-        }
+            bool kq=Constant.RedisServerIni.Publish(txtchat.Text);
+            if (kq)
+            {
+				txtchat.Text = "";
+
+			}
+			else
+            {
+				MessageBox.Show("Máy chủ xảy ra lỗi!");
+				return;
+			}
+		}
 
         private void txtchat_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (txtchat.Text.Trim() == "Nhấn để chat..")
+            if (txtchat.Text.Trim() == "Nhấn để trò chuyện..")
             {
                 txtchat.Text = "";
             }
@@ -163,17 +176,35 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
         {
             if (txtchat.Text.Trim() == "")
             {
-                txtchat.Text = "Nhấn để chat..";
+                txtchat.Text = "Nhấn để trò chuyện..";
             }
         }
 
-		private void txtchat_KeyUp(object sender, KeyEventArgs e)
-		{
-			if (e.Key != System.Windows.Input.Key.Enter) return;
-			e.Handled = true;
-			Constant.RedisServerIni.Publish(txtchat.Text);
-            //MessageBox.Show("Enter pressed");
-            txtchat.Text = string.Empty;
-		}
+        private void txtchat_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case System.Windows.Input.Key.Enter when Keyboard.Modifiers.HasFlag(ModifierKeys.Shift):
+                    {
+                        e.Handled = true;
+                        txtchat.Text += "\n";
+                        txtchat.SelectionStart = txtchat.Text.Length + 1;
+                    }
+                    break;
+                case System.Windows.Input.Key.Enter:
+                    {
+                        Mouse.OverrideCursor = Cursors.Wait;
+                        e.Handled = true;
+						Constant.RedisServerIni.Publish(txtchat.Text);
+						txtchat.Text = string.Empty;
+                        Mouse.OverrideCursor = Cursors.Arrow;
+                    }
+                    break;
+
+                default:
+                    break;
+
+            }
+        }
 	}
 }

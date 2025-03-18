@@ -36,7 +36,9 @@ namespace ChatAppRealTime
 
 		private void AIChat_Click(object sender, RoutedEventArgs e)
 		{
-
+			ChatAi chatAi= new ChatAi();
+			chatAi.Show();
+			Window.GetWindow(this).Close();
 		}
 
 		private void Settings_Click(object sender, RoutedEventArgs e)
