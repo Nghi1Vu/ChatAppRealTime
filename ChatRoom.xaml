@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:ChatAppRealTime"
         mc:Ignorable="d"   xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
  xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
+                             xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
         Title="ChatRoom" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -39,7 +40,38 @@
                     </Grid.ColumnDefinitions>
                 </Grid>
             </ScrollViewer>
-            <TextBox x:Name="txtchat" KeyUp="txtchat_KeyUp" TextWrapping="Wrap" LostFocus="txtchat_LostFocus" Text="Nhấn để trò chuyện.." GotFocus="txtchat_GotFocus" Grid.Row="1"/>
+            <TextBox x:Name="txtchat" Grid.Row="1">
+                <TextBox.Template>
+                    <ControlTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.9*"/>
+                                <ColumnDefinition Width="0.1*"/>
+                            </Grid.ColumnDefinitions>
+                            <emoji:TextBox KeyUp="txtchat_KeyUp" TextWrapping="Wrap" LostFocus="txtchat_LostFocus" Text="Nhấn để trò chuyện.." GotFocus="txtchat_GotFocus" Name="chatchild" Grid.Column="0"></emoji:TextBox>
+                            <Button Grid.Column="1" Content="😀" Name="BtnEmoji" Click="BtnEmoji_Click"></Button>
+                            <ListBox MouseLeftButtonDown="lbEmoji_MouseLeftButtonDown" Visibility="Hidden" Name="lbEmoji" Panel.ZIndex="-1" Grid.Column="1" Margin="0 -100 0 0">
+                                <ListBoxItem>
+                                    <emoji:TextBlock Text="💖"/>
+                                </ListBoxItem>
+                                <ListBoxItem>
+                                    <emoji:TextBlock Text="😁"/>
+                                </ListBoxItem>
+                                <ListBoxItem>
+                                    <emoji:TextBlock Text="🐨"/>
+                                </ListBoxItem>
+                                <ListBoxItem>
+                                    <emoji:TextBlock Text="🐱‍🐉"/>
+                                </ListBoxItem>
+                                <ListBoxItem>
+                                    <emoji:TextBlock Text="👩🏿‍👩🏻‍👦🏽"/>
+                                </ListBoxItem>
+                            </ListBox>
+                        </Grid>
+                    </ControlTemplate>
+                    
+                </TextBox.Template>
+            </TextBox>
             <Button Grid.Row="1" Click="btnsend_Click" Grid.Column="1" Name="btnsend" Background="red">
                 Gửi &#8594;
             </Button>

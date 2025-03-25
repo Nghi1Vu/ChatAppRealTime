@@ -40,7 +40,7 @@ namespace ChatAppRealTime
 				conn = ConnectionMultiplexer.Connect(
 			new ConfigurationOptions
 			{
-				}
+			}
 		);
 				db = conn.GetDatabase();
 				RedisBuilder();
