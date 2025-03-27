@@ -40,14 +40,10 @@ namespace ChatAppRealTime
 				conn = ConnectionMultiplexer.Connect(
 			new ConfigurationOptions
 			{
-<<<<<<< HEAD
                 EndPoints = { { Constant.AppSetting["EndPoints"], 10930 } },
                 User = Constant.AppSetting["User"],
                 Password = Constant.AppSetting["Password"] 
             }
-=======
-			}
->>>>>>> 87e4e85ff8fa6d992739b8b570e06eddf3dcb3af
 		);
 				db = conn.GetDatabase();
 				RedisBuilder();
