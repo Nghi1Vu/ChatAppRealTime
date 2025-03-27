@@ -1,5 +1,6 @@
 ﻿using NetTopologySuite.Index.HPRtree;
 using Newtonsoft.Json;
+using OpenAI.Chat;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static ChatAppRealTime.Model;
+using static Emoji.Wpf.EmojiData;
 
 namespace ChatAppRealTime
 {
@@ -98,7 +100,7 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
             uIElementTime.SetValue(TextBlock.TextProperty, JsonConvert.DeserializeObject<DateTime>("\"" + item.date.Split(":")[0] + ":" + item.date.Split(":")[1] + "\"").ToString("dd/MM/yyyy hh:mm tt"));
 			//end
 			//info element
-			TextBlock uIElementInfo = new TextBlock();
+			Emoji.Wpf.TextBlock uIElementInfo = new Emoji.Wpf.TextBlock();
             uIElementInfo.SetValue(Grid.ColumnProperty, item.from == Constant.RedisServerIni.currentusr ? 4 : 1);
             uIElementInfo.SetValue(Grid.RowProperty, row);
 			//uIElementInfo.Background = new SolidColorBrush(Colors.AliceBlue);
@@ -151,10 +153,10 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
         }
         private void btnsend_Click(object sender, RoutedEventArgs e)
         {
-            bool kq=Constant.RedisServerIni.Publish(txtchat.Text);
+            bool kq=Constant.RedisServerIni.Publish(GetTextBoxInside<TextBox>(txtchat,"chatchild").Text);
             if (kq)
             {
-				txtchat.Text = "";
+				GetTextBoxInside<TextBox>(txtchat,"chatchild").Text = "";
 
 			}
 			else
@@ -166,17 +168,17 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
 
         private void txtchat_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (txtchat.Text.Trim() == "Nhấn để trò chuyện..")
+            if (GetTextBoxInside<TextBox>(txtchat,"chatchild").Text.Trim() == "Nhấn để trò chuyện..")
             {
-                txtchat.Text = "";
+                GetTextBoxInside<TextBox>(txtchat,"chatchild").Text = "";
             }
         }
 
         private void txtchat_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (txtchat.Text.Trim() == "")
+            if (GetTextBoxInside<TextBox>(txtchat,"chatchild").Text.Trim() == "")
             {
-                txtchat.Text = "Nhấn để trò chuyện..";
+                GetTextBoxInside<TextBox>(txtchat,"chatchild").Text = "Nhấn để trò chuyện..";
             }
         }
 
@@ -187,16 +189,16 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
                 case System.Windows.Input.Key.Enter when Keyboard.Modifiers.HasFlag(ModifierKeys.Shift):
                     {
                         e.Handled = true;
-                        txtchat.Text += "\n";
-                        txtchat.SelectionStart = txtchat.Text.Length + 1;
+                        GetTextBoxInside<TextBox>(txtchat,"chatchild").Text += "\n";
+                        GetTextBoxInside<TextBox>(txtchat,"chatchild").SelectionStart = GetTextBoxInside<TextBox>(txtchat,"chatchild").Text.Length + 1;
                     }
                     break;
                 case System.Windows.Input.Key.Enter:
                     {
                         Mouse.OverrideCursor = Cursors.Wait;
                         e.Handled = true;
-						Constant.RedisServerIni.Publish(txtchat.Text);
-						txtchat.Text = string.Empty;
+						Constant.RedisServerIni.Publish(GetTextBoxInside<TextBox>(txtchat,"chatchild").Text);
+						GetTextBoxInside<TextBox>(txtchat,"chatchild").Text = string.Empty;
                         Mouse.OverrideCursor = Cursors.Arrow;
                     }
                     break;
@@ -206,5 +208,27 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
 
             }
         }
+
+		private void BtnEmoji_Click(object sender, RoutedEventArgs e)
+		{
+            if(GetTextBoxInside<ListBox>(txtchat, "lbEmoji").Visibility==Visibility.Hidden)
+			    GetTextBoxInside<ListBox>(txtchat, "lbEmoji").Visibility = Visibility.Visible;
+            else
+				GetTextBoxInside<ListBox>(txtchat, "lbEmoji").Visibility = Visibility.Hidden;
+
+		}
+        private T GetTextBoxInside<T>(Control element,string name)
+        {
+            return (T)element.Template.FindName(name, element);
+        }
+		private void lbEmoji_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (GetTextBoxInside<TextBox>(txtchat, "chatchild").Text.Trim() == "Nhấn để trò chuyện..")
+			{
+				GetTextBoxInside<TextBox>(txtchat, "chatchild").Text = "";
+			}
+			GetTextBoxInside<TextBox>(txtchat, "chatchild").Text += ((Emoji.Wpf.TextBlock)((ListBoxItem)((ListBox)e.Source).SelectedItem).Content).Text;
+
+		}
 	}
 }

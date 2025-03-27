@@ -13,6 +13,11 @@ namespace ChatAppRealTime
             public string username { get; set; }
             public string password { get; set; }
         }
+		public class ChatBotsHistoryModel
+        {
+            public string role { get; set; }
+            public string content { get; set; }
+        }
 		public class ChatAiResponseModel
 		{
 			public string id { get; set; }
