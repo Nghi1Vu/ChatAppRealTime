@@ -15,7 +15,8 @@ namespace ChatAppRealTime
     {
         public App()
         {
-			var redisServer=Constant.RedisServerIni;
+            Environment.SetEnvironmentVariable("AI_API_KEY", Constant.AppSetting["AI_API_KEY"]); 
+            var redisServer=Constant.RedisServerIni;
         }
 
 		private void Application_Startup(object sender, StartupEventArgs e)
