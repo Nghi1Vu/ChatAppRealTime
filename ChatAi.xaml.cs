@@ -113,7 +113,7 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 			var req = await client.PostAsJsonAsync("/v1/chat/completions", new
 			{
 				model = modelai,
-				messages = new object[1] { new { role = "user", content = txtchat.Text } }
+				messages = ChatBotsHistory(new ChatBotsHistoryModel() { role = "user", content = txtchat.Text })
 			});
 			req.EnsureSuccessStatusCode();
 			var res = await req.Content.ReadAsStringAsync();
@@ -136,6 +136,22 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 				MessageBox.Show("Máy chủ xảy ra lỗi!");
 				return;
 			}
+		}
+		private List<ChatBotsHistoryModel> ChatBotsHistory(ChatBotsHistoryModel model)
+		{
+			var messages = Constant.RedisServerIni.FTSearch("idx:aihistories", "");
+			var data = messages.Select(x => new ChatAiModel()
+			{
+				from = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).from,
+				date = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).date,
+				message = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).message,
+				type = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).type,
+			});
+			data = data.OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
+			var array = new List<ChatBotsHistoryModel>();
+			array.AddRange(data.Select(x => new ChatBotsHistoryModel() { content = x.message, role = x.from == "meta-llama/Llama-3.3-70B-Instruct-Turbo" ? "assistant" : "user" } ));
+			array.Add(model);
+			return array;
 		}
 		private async void btnsend_Click(object sender, RoutedEventArgs e)
 		{
