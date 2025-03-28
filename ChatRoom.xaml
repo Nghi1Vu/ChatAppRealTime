@@ -8,7 +8,7 @@
  xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
                              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
         Title="ChatRoom" Height="450" Width="800">
-    <Grid>
+    <Grid x:Name="grdContainer">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -48,25 +48,9 @@
                                 <ColumnDefinition Width="0.9*"/>
                                 <ColumnDefinition Width="0.1*"/>
                             </Grid.ColumnDefinitions>
-                            <emoji:TextBox KeyUp="txtchat_KeyUp"  Text="{Binding Path=chatchild, Mode=TwoWay}"  TextWrapping="Wrap" LostFocus="txtchat_LostFocus" GotFocus="txtchat_GotFocus" Name="chatchild" Grid.Column="0"></emoji:TextBox>
+                            <emoji:TextBox KeyUp="txtchat_KeyUp"  Text="Nhấn để trò chuyện.."  TextWrapping="Wrap" LostFocus="txtchat_LostFocus" GotFocus="txtchat_GotFocus" Name="chatchild" Grid.Column="0"></emoji:TextBox>
                             <Button Grid.Column="1" Content="😀" Name="BtnEmoji" Click="BtnEmoji_Click"></Button>
-                            <ListBox PreviewMouseLeftButtonDown="lbEmoji_PreviewMouseLeftButtonDown" Visibility="Hidden" Name="lbEmoji" Panel.ZIndex="-1" Grid.Column="1" Margin="0 -100 0 0">
-                                <ListBoxItem>
-                                    <emoji:TextBlock Text="💖"/>
-                                </ListBoxItem>
-                                <ListBoxItem>
-                                    <emoji:TextBlock Text="😁"/>
-                                </ListBoxItem>
-                                <ListBoxItem>
-                                    <emoji:TextBlock Text="🐨"/>
-                                </ListBoxItem>
-                                <ListBoxItem>
-                                    <emoji:TextBlock Text="🐱‍🐉"/>
-                                </ListBoxItem>
-                                <ListBoxItem>
-                                    <emoji:TextBlock Text="👩🏿‍👩🏻‍👦🏽"/>
-                                </ListBoxItem>
-                            </ListBox>
+                           
                         </Grid>
                     </ControlTemplate>
                     
