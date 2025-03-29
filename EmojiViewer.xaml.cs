@@ -38,8 +38,9 @@ namespace ChatAppRealTime
             {
                 MessageBox.Show($"Bạn đã chọn emoji: {textBlock.Text}");
             }
-            TextBlock clickedItem =Helper.Common.FindParent<TextBlock>(e.OriginalSource as DependencyObject);
 
+            TextBlock clickedItem =Helper.Common.FindParent<TextBlock>(e.OriginalSource as DependencyObject);
+            Helper.Common.GetTextBoxInside<TextBox>((Control)this.Owner.FindName("txtchat"), "chatchild").Focus();
             if (clickedItem != null)
             {
                 // Lấy nội dung emoji và thêm vào TextBox
