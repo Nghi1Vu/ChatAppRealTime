@@ -8,6 +8,7 @@
  xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
         Title="Bot" Height="450" Width="800">
     <Grid>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -16,6 +17,16 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <local:Menu Panel.ZIndex="1000" />
+        <Button Name="changeModel" Click="changeModel_Click" Panel.ZIndex="1" Grid.Row="1" Width="80" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5">Model</Button>
+        <!-- Popup chứa ComboBox -->
+        <Popup x:Name="chooseModel" Placement="MousePoint" StaysOpen="False">
+            <Border Background="White" BorderBrush="Black" BorderThickness="1" Padding="5">
+                <ComboBox SelectionChanged="ComboBox_SelectionChanged" Width="150">
+                    <ComboBoxItem>meta-llama/Llama-3.3-70B-Instruct-Turbo</ComboBoxItem>
+                    <ComboBoxItem>mistralai/Mixtral-8x7B-Instruct-v0.1</ComboBoxItem>
+                </ComboBox>
+            </Border>
+        </Popup>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

@@ -63,5 +63,12 @@ namespace ChatAppRealTime
 			ListUsers listUsers = new ListUsers();
 			listUsers.Show();
 		}
+
+		private void Login_Click(object sender, RoutedEventArgs e)
+		{
+			MainWindow mainWindow = new MainWindow();
+			mainWindow.Show();
+			Window.GetWindow(this).Close();
+		}
 	}
 }

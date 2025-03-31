@@ -20,6 +20,7 @@
                       HorizontalAlignment="Center"  Foreground="White" Background="Transparent" BorderThickness="0" Padding="10"
                       VerticalAlignment="Center"/>
                 <Button Click="UserList_Click" Content="👥 Người dùng" Name="UserList" Foreground="White" Background="Transparent" BorderThickness="0" Padding="10"/>
+                <Button Click="Login_Click" Content="↪️ Đăng xuất" Name="Login" Foreground="White" Background="Transparent" BorderThickness="0" Padding="10"/>
 
             </StackPanel>
 

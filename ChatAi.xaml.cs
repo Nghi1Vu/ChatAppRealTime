@@ -32,6 +32,7 @@ namespace ChatAppRealTime
 	/// </summary>
 	public partial class ChatAi : AdonisUI.Controls.AdonisWindow
 	{
+		string modelai = "meta-llama/Llama-3.3-70B-Instruct-Turbo";
 		public ChatAi()
 		{
 			InitializeComponent();
@@ -78,6 +79,7 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 		}
 		private void ldChatHistory()
 		{
+			grdchat.Children.Clear();
 			var messages = Constant.RedisServerIni.FTSearch("idx:aihistories", "");
 			int row = 0;
 			var data = messages.Select(x => new ChatAiModel()
@@ -87,7 +89,7 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 				message = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).message,
 				type = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).type,
 			});
-			data = data.OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
+			data = data.Where(x => x.from == Constant.RedisServerIni.currentusr || x.from == modelai).OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
 			foreach (var item in data)
 			{
 				createGrdChat(ref row, item, item.type);
@@ -100,7 +102,6 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 			{
 				return;
 			}
-			string modelai = "meta-llama/Llama-3.3-70B-Instruct-Turbo";
 			string ApiKey = Environment.GetEnvironmentVariable("AI_API_KEY");
 			if (string.IsNullOrEmpty(ApiKey))
 			{
@@ -149,7 +150,7 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 			});
 			data = data.OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
 			var array = new List<ChatBotsHistoryModel>();
-			array.AddRange(data.Select(x => new ChatBotsHistoryModel() { content = x.message, role = x.from == "meta-llama/Llama-3.3-70B-Instruct-Turbo" ? "assistant" : "user" } ));
+			array.AddRange(data.Select(x => new ChatBotsHistoryModel() { content = x.message, role = x.from == "meta-llama/Llama-3.3-70B-Instruct-Turbo" ? "assistant" : "user" }));
 			array.Add(model);
 			return array;
 		}
@@ -199,6 +200,18 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 				default:
 					break;
 			}
+		}
+
+		private void changeModel_Click(object sender, RoutedEventArgs e)
+		{
+			chooseModel.IsOpen = true;
+		}
+
+		private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			modelai = ((ComboBoxItem)((ComboBox)e.OriginalSource).SelectedItem).Content?.ToString();
+			if (modelai != null)
+				ldChatHistory();
 		}
 	}
 }
