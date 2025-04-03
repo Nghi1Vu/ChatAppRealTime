@@ -1,5 +1,6 @@
 ﻿using NetTopologySuite.Index.HPRtree;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NRedisStack.Search.Aggregation;
 using OpenAI;
 using OpenAI.Chat;
@@ -33,10 +34,23 @@ namespace ChatAppRealTime
 	public partial class ChatAi : AdonisUI.Controls.AdonisWindow
 	{
 		string modelai = "meta-llama/Llama-3.3-70B-Instruct-Turbo";
+		string key_session { get; set; }
 		public ChatAi()
 		{
 			InitializeComponent();
 			ldChatHistory();
+			dsHistory();
+		}
+		private void dsHistory()
+		{
+			var _key_session = Constant.RedisServerIni.FTSelectOne("idx:aihistories", "", "key_session");
+
+			lsthistory.Items.Clear();
+			foreach (var item in _key_session)
+			{
+				lsthistory.Items.Add(item ?? "--Trống--");
+
+			}
 		}
 		private void createGrdChat(ref int row, ChatroomModel item, int type) //type==1 user, type==2 bot
 		{
@@ -88,8 +102,9 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 				date = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).date,
 				message = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).message,
 				type = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).type,
+				key_session = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).key_session,
 			});
-			data = data.Where(x => x.from == Constant.RedisServerIni.currentusr || x.from == modelai).OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
+			data = data.Where(x => (x.from == Constant.RedisServerIni.currentusr || x.from == modelai) && x.key_session==(key_session??"")).OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
 			foreach (var item in data)
 			{
 				createGrdChat(ref row, item, item.type);
@@ -119,7 +134,16 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 			req.EnsureSuccessStatusCode();
 			var res = await req.Content.ReadAsStringAsync();
 			var result = JsonConvert.DeserializeObject<ChatAiResponseModel>(res);
-			bool kq = Constant.RedisServerIni.SaveMessageAi(Constant.RedisServerIni.currentusr, txtchat.Text, modelai, result?.choices.FirstOrDefault()?.message?.content ?? "");
+			key_session = key_session??Guid.NewGuid().ToString();
+			var msai = new MessageAiModel()
+			{
+				key_session = key_session,
+				from = Constant.RedisServerIni.currentusr,
+				message = txtchat.Text,
+				modelai = modelai,
+				messageai = result?.choices.FirstOrDefault()?.message?.content ?? ""
+			};
+			bool kq = Constant.RedisServerIni.SaveMessageAi(msai);
 			if (kq)
 			{
 				ChatroomModel chataiModel = new ChatroomModel() { date = DateTime.Now.ToString(), from = modelai, message = result?.choices.FirstOrDefault()?.message?.content ?? "" };
@@ -157,6 +181,7 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 		private async void btnsend_Click(object sender, RoutedEventArgs e)
 		{
 			await SendFunc();
+			dsHistory();
 
 		}
 
@@ -212,6 +237,22 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 			modelai = ((ComboBoxItem)((ComboBox)e.OriginalSource).SelectedItem).Content?.ToString();
 			if (modelai != null)
 				ldChatHistory();
+		}
+
+		private void lsthistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			key_session = ((JValue)((ListBox)e.OriginalSource).SelectedItem)?.ToString();
+			if (key_session != null)
+			{
+				ldChatHistory();
+				//((ListBoxItem)((ListBox)e.OriginalSource).fo)?.fo;
+			}
+		}
+
+		private void CreateNew_Click(object sender, RoutedEventArgs e)
+		{
+			key_session = Guid.NewGuid().ToString();
+			ldChatHistory();
 		}
 	}
 }

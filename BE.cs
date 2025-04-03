@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows.Controls;
 using Newtonsoft.Json;
+using static ChatAppRealTime.Model;
+using Newtonsoft.Json.Linq;
 
 namespace ChatAppRealTime
 {
@@ -40,10 +42,10 @@ namespace ChatAppRealTime
 				conn = ConnectionMultiplexer.Connect(
 			new ConfigurationOptions
 			{
-                EndPoints = { { Constant.AppSetting["EndPoints"], 10930 } },
-                User = Constant.AppSetting["User"],
-                Password = Constant.AppSetting["Password"] 
-            }
+				EndPoints = { { Constant.AppSetting["EndPoints"], 10930 } },
+				User = Constant.AppSetting["User"],
+				Password = Constant.AppSetting["Password"]
+			}
 		);
 				db = conn.GetDatabase();
 				RedisBuilder();
@@ -93,6 +95,7 @@ namespace ChatAppRealTime
 				//end message
 				// message AI
 				schema = new Schema()
+		 .AddTextField(new FieldName("$.key_session", "key_session"))
 		 .AddTextField(new FieldName("$.from", "from"))
 		 .AddTextField(new FieldName("$.date", "date"))
 		 .AddTextField(new FieldName("$.message", "message"))
@@ -109,7 +112,17 @@ namespace ChatAppRealTime
 				}
 				catch
 				{
-
+					db.FT().DropIndex(
+			"idx:aihistories",
+			false
+		);
+					db.FT().Create(
+			"idx:aihistories",
+			new FTCreateParams()
+				.On(IndexDataType.JSON)
+				.Prefix("aihistory:"),
+			schema
+		);
 				}
 
 				//end message ai
@@ -167,7 +180,17 @@ namespace ChatAppRealTime
 				SearchResult findPaulResult = db.FT().Search(
 							 name, query != "" ? (new Query(query)).Limit(0, 10000) : (new Query()).Limit(0, 10000));
 				var data = findPaulResult.Documents.Select(x => x["json"]);
-
+				return data;
+			}
+			public IEnumerable<JToken> FTSelectOne(string name, string query, string slect)
+			{
+				SearchResult findPaulResult = db.FT().Search(
+							 name, query != "" ? (new Query(query)).Limit(0, 10000) : (new Query()).Limit(0, 10000));
+				IEnumerable<JToken> data = null;
+				data = findPaulResult.Documents
+.Select(x => JsonConvert.DeserializeObject<JObject>(x["json"].ToString())?[slect])// Lấy cột "slect"
+.Distinct()// Loại bỏ trùng lặp
+.ToList(); 
 				return data;
 			}
 			public bool SaveMessage(string from, string message)
@@ -182,21 +205,23 @@ namespace ChatAppRealTime
 
 				return chatroomSet;
 			}
-			public bool SaveMessageAi(string from, string message, string modelai, string messageai)
+			public bool SaveMessageAi(MessageAiModel model)
 			{
 				var chatUser = new
 				{
-					from = from,
+					key_session = model.key_session,
+					from = model.from,
 					date = DateTime.Now,
-					message = message,
-					type=1
+					message = model.message,
+					type = 1
 				};
 				var chatAi = new  //type ==1 user, type == 2 bot
 				{
-					from = modelai,
+					key_session = model.key_session,
+					from = model.modelai,
 					date = DateTime.Now,
-					message = messageai,
-					type=2
+					message = model.messageai,
+					type = 2
 				};
 				bool chatuserSet = db.JSON().Set($"aihistory:{this["aihistory:"]}", "$", chatUser);
 				bool chataiSet = db.JSON().Set($"aihistory:{this["aihistory:"]}", "$", chatAi);
