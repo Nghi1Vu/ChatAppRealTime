@@ -98,6 +98,7 @@ namespace ChatAppRealTime
 		 .AddTextField(new FieldName("$.key_session", "key_session"))
 		 .AddTextField(new FieldName("$.from", "from"))
 		 .AddTextField(new FieldName("$.date", "date"))
+		 .AddNumericField(new FieldName("$.timestamp", "timestamp"))
 		 .AddTextField(new FieldName("$.message", "message"))
 		 .AddNumericField(new FieldName("$.type", "type"));
 				try
@@ -182,16 +183,23 @@ namespace ChatAppRealTime
 				var data = findPaulResult.Documents.Select(x => x["json"]);
 				return data;
 			}
-			public IEnumerable<JToken> FTSelectOne(string name, string query, string slect)
+			public IEnumerable<RedisResult> FTSelectOne(string name, string query, string slect)
 			{
-				SearchResult findPaulResult = db.FT().Search(
-							 name, query != "" ? (new Query(query)).Limit(0, 10000) : (new Query()).Limit(0, 10000));
-				IEnumerable<JToken> data = null;
-				data = findPaulResult.Documents
-.Select(x => JsonConvert.DeserializeObject<JObject>(x["json"].ToString())?[slect])// Lấy cột "slect"
-.Distinct()// Loại bỏ trùng lặp
-.ToList(); 
-				return data;
+//				SearchResult findPaulResult = db.FT().Search(
+//							 name, query != "" ? (new Query(query)).Limit(0, 10000) : (new Query()).Limit(0, 10000));
+//				IEnumerable<JToken> data = null;
+//				data = findPaulResult.Documents
+//.Select(x => JsonConvert.DeserializeObject<JObject>(x["json"].ToString())?[slect])// Lấy cột "slect"
+//.Distinct()// Loại bỏ trùng lặp
+//.ToList(); 
+				var result = db.Execute("FT.AGGREGATE",
+	name,
+	"@type:[1 1]",
+	"GROUPBY", "1", "@key_session",
+	"REDUCE", "FIRST_VALUE", "4", "@message", "BY", "@timestamp", "DESC","AS","message");
+				var rows = ((RedisResult[])result).Skip(1);
+
+				return rows;
 			}
 			public bool SaveMessage(string from, string message)
 			{
@@ -212,6 +220,7 @@ namespace ChatAppRealTime
 					key_session = model.key_session,
 					from = model.from,
 					date = DateTime.Now,
+					timestamp = DateTime.Now.Ticks,
 					message = model.message,
 					type = 1
 				};
@@ -220,6 +229,7 @@ namespace ChatAppRealTime
 					key_session = model.key_session,
 					from = model.modelai,
 					date = DateTime.Now,
+					timestamp = DateTime.Now.Ticks,
 					message = model.messageai,
 					type = 2
 				};

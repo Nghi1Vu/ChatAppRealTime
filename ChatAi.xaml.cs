@@ -44,13 +44,13 @@ namespace ChatAppRealTime
 		private void dsHistory()
 		{
 			var _key_session = Constant.RedisServerIni.FTSelectOne("idx:aihistories", "", "key_session");
-
-			lsthistory.Items.Clear();
-			foreach (var item in _key_session)
+			var data = _key_session.Select(x => new ChatAiModel()
 			{
-				lsthistory.Items.Add(item ?? "--Trống--");
-
-			}
+				message = x[3].ToString(),
+				key_session = x[1].ToString(),
+			});
+			lsthistory.ItemsSource = null;
+			lsthistory.ItemsSource = data;
 		}
 		private void createGrdChat(ref int row, ChatroomModel item, int type) //type==1 user, type==2 bot
 		{
@@ -104,7 +104,7 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 				type = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).type,
 				key_session = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).key_session,
 			});
-			data = data.Where(x => (x.from == Constant.RedisServerIni.currentusr || x.from == modelai) && x.key_session==(key_session??"")).OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
+			data = data.Where(x => (x.from == Constant.RedisServerIni.currentusr || x.from == modelai) && x.key_session == (key_session ?? "")).OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
 			foreach (var item in data)
 			{
 				createGrdChat(ref row, item, item.type);
@@ -134,7 +134,7 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 			req.EnsureSuccessStatusCode();
 			var res = await req.Content.ReadAsStringAsync();
 			var result = JsonConvert.DeserializeObject<ChatAiResponseModel>(res);
-			key_session = key_session??Guid.NewGuid().ToString();
+			key_session = key_session ?? Guid.NewGuid().ToString();
 			var msai = new MessageAiModel()
 			{
 				key_session = key_session,
@@ -245,7 +245,6 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 			if (key_session != null)
 			{
 				ldChatHistory();
-				//((ListBoxItem)((ListBox)e.OriginalSource).fo)?.fo;
 			}
 		}
 

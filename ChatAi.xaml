@@ -58,7 +58,9 @@
                 <Button Name="CreateNew" Click="CreateNew_Click">Tạo mới</Button>
                 <ScrollViewer  x:Name="sclonl" VerticalScrollBarVisibility="Auto" >
 
-                    <ListBox SelectionChanged="lsthistory_SelectionChanged" x:Name="lsthistory">
+                    <ListBox SelectionChanged="lsthistory_SelectionChanged" x:Name="lsthistory" DisplayMemberPath="message"
+         SelectedValuePath="key_session">
+                        
                     </ListBox>
                 </ScrollViewer>
             </StackPanel>
