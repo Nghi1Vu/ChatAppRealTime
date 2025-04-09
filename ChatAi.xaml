@@ -54,11 +54,11 @@
                 Gửi &#8594;
             </Button>
             <TextBlock Grid.Row="0" Grid.Column="1">Lịch sử</TextBlock>
-            <StackPanel Margin="0 15 0 0"  Grid.Row="0" Grid.Column="1">
+            <StackPanel  Margin="0 15 0 0"  Grid.Row="0" Grid.Column="1">
                 <Button Name="CreateNew" Click="CreateNew_Click">Tạo mới</Button>
-                <ScrollViewer  x:Name="sclonl" VerticalScrollBarVisibility="Auto" >
+                <ScrollViewer x:Name="sclonl" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
 
-                    <ListBox SelectionChanged="lsthistory_SelectionChanged" x:Name="lsthistory" DisplayMemberPath="message"
+                    <ListBox Height="300" Width="100" SelectionChanged="lsthistory_SelectionChanged" x:Name="lsthistory" DisplayMemberPath="message"
          SelectedValuePath="key_session">
                         
                     </ListBox>

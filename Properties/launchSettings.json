@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ChatAppRealTime": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}

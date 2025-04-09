@@ -65,6 +65,10 @@ namespace ChatAppRealTime
         {
             public int type { get; set; }
             public string key_session { get; set; }
-        }
+			public override string ToString()
+			{
+				return message;
+			}
+		}
     }
 }

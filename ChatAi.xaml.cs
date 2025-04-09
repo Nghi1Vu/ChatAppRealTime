@@ -85,11 +85,11 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 			uIElementInfo.Padding = new Thickness(10);
 			uIElementInfo.SetValue(TextBlock.TextProperty, item.message);
 			//end
-			row++;
 			grdchat.Children.Add(uIElementImg);
 			grdchat.Children.Add(uIElementUsr);
 			grdchat.Children.Add(uIElementInfo);
 			grdchat.Children.Add(uIElementTime);
+			row++;
 		}
 		private void ldChatHistory()
 		{
@@ -241,11 +241,13 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 
 		private void lsthistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			key_session = ((JValue)((ListBox)e.OriginalSource).SelectedItem)?.ToString();
+			Mouse.OverrideCursor = Cursors.Wait;
+			key_session = ((ChatAiModel)((ListBox)e.OriginalSource).SelectedItem)?.key_session;
 			if (key_session != null)
 			{
 				ldChatHistory();
 			}
+			Mouse.OverrideCursor = Cursors.Arrow;
 		}
 
 		private void CreateNew_Click(object sender, RoutedEventArgs e)
