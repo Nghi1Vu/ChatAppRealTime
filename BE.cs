@@ -185,13 +185,6 @@ namespace ChatAppRealTime
 			}
 			public IEnumerable<RedisResult> FTSelectOne(string name, string query, string slect)
 			{
-//				SearchResult findPaulResult = db.FT().Search(
-//							 name, query != "" ? (new Query(query)).Limit(0, 10000) : (new Query()).Limit(0, 10000));
-//				IEnumerable<JToken> data = null;
-//				data = findPaulResult.Documents
-//.Select(x => JsonConvert.DeserializeObject<JObject>(x["json"].ToString())?[slect])// Lấy cột "slect"
-//.Distinct()// Loại bỏ trùng lặp
-//.ToList(); 
 				var result = db.Execute("FT.AGGREGATE",
 	name,
 	"@type:[1 1]",
