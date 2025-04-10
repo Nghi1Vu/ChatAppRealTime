@@ -129,9 +129,27 @@ namespace ChatAppRealTime
 
 		private void AdonisWindow_KeyUp(object sender, KeyEventArgs e)
 		{
-			if (e.Key != System.Windows.Input.Key.Enter) return;
-			e.Handled = true;
-			ButtonLogin_Click(sender, e);
+            switch (e.Key)
+            {
+                case System.Windows.Input.Key.Enter:
+                    {
+                        e.Handled = true;
+
+                        if (isRegister)
+						{
+                            ButtonRegister_Click(sender, e);
+
+                        }
+						else
+						{
+                            ButtonLogin_Click(sender, e);
+                        }               
+
+                    }
+                    break;
+                default:
+                    break;
+            }
 		}
 	}
 }

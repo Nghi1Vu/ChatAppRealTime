@@ -196,7 +196,8 @@ namespace ChatAppRealTime
 	name,
 	"@type:[1 1]",
 	"GROUPBY", "1", "@key_session",
-	"REDUCE", "FIRST_VALUE", "4", "@message", "BY", "@timestamp", "DESC","AS","message");
+	"REDUCE", "FIRST_VALUE", "4", "@message", "BY", "@timestamp", "DESC","AS","message",
+    "REDUCE", "FIRST_VALUE", "4", "@timestamp", "BY", "@timestamp", "DESC", "AS", "timestamp");
 				var rows = ((RedisResult[])result).Skip(1);
 
 				return rows;
