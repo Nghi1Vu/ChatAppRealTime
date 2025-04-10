@@ -32,8 +32,10 @@
 
                 <Grid x:Name="grdchat" Grid.Row="0" Grid.Column="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.3*"/>
                         <ColumnDefinition/>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.3*"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                 </Grid>

@@ -38,7 +38,6 @@ namespace ChatAppRealTime
 		public ChatAi()
 		{
 			InitializeComponent();
-			key_session = Guid.NewGuid().ToString();
 			ldChatHistory();
 			dsHistory();
 		}
@@ -56,7 +55,7 @@ namespace ChatAppRealTime
 		private void createGrdChat(ref int row, ChatroomModel item, int type) //type==1 user, type==2 bot
 		{
 			DateTime outDate;
-			grdchat.RowDefinitions.Add(new RowDefinition() { Height =new GridLength((double)200) });
+			grdchat.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 			//img element
 			Image uIElementImg = new Image();
 			uIElementImg.SetValue(Grid.ColumnProperty, type == 1 ? 3 : 0);
@@ -88,8 +87,8 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 			//end
 			grdchat.Children.Add(uIElementImg);
 			grdchat.Children.Add(uIElementUsr);
-			grdchat.Children.Add(uIElementTime);
 			grdchat.Children.Add(uIElementInfo);
+			grdchat.Children.Add(uIElementTime);
 			row++;
 		}
 		private void ldChatHistory()
@@ -106,8 +105,6 @@ new Uri(type == 2 ? @"/ChatAppRealTime;component/img/chatbot.jpg" : @"/ChatAppRe
 				key_session = JsonConvert.DeserializeObject<ChatAiModel>(x.ToString()).key_session,
 			});
 			data = data.Where(x => (x.from == Constant.RedisServerIni.currentusr || x.from == modelai) && x.key_session == (key_session ?? "")).OrderBy(x => JsonConvert.DeserializeObject<DateTime>("\"" + x.date.Split(":")[0] + ":" + x.date.Split(":")[1] + "\"")).ToList();
-			grdchat.RowDefinitions.Clear();
-
 			foreach (var item in data)
 			{
 				createGrdChat(ref row, item, item.type);
