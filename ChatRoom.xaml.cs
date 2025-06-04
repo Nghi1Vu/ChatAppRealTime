@@ -195,7 +195,9 @@ new Uri(@"/ChatAppRealTime;component/img/OIP.jpg", UriKind.Relative));
 					break;
 				case System.Windows.Input.Key.Enter:
 					{
-						Mouse.OverrideCursor = Cursors.Wait;
+						Helper.Common.GetTextBoxInside<TextBox>(txtchat, "chatchild").Focus();
+
+                        Mouse.OverrideCursor = Cursors.Wait;
 						e.Handled = true;
 						Constant.RedisServerIni.Publish(Helper.Common.GetTextBoxInside<TextBox>(txtchat, "chatchild").Text);
 						Helper.Common.GetTextBoxInside<TextBox>(txtchat, "chatchild").Text = string.Empty;
