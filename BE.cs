@@ -76,6 +76,7 @@ namespace ChatAppRealTime
 				schema = new Schema()
 		 .AddTextField(new FieldName("$.from", "from"))
 		 .AddTextField(new FieldName("$.date", "date"))
+		 .AddNumericField(new FieldName("$.timestamp", "timestamp"))
 		 .AddTextField(new FieldName("$.message", "message"));
 				try
 				{
@@ -113,17 +114,7 @@ namespace ChatAppRealTime
 				}
 				catch
 				{
-					db.FT().DropIndex(
-			"idx:aihistories",
-			false
-		);
-					db.FT().Create(
-			"idx:aihistories",
-			new FTCreateParams()
-				.On(IndexDataType.JSON)
-				.Prefix("aihistory:"),
-			schema
-		);
+					
 				}
 
 				//end message ai
@@ -178,10 +169,21 @@ namespace ChatAppRealTime
 			}
 			public IEnumerable<RedisValue> FTSearch(string name, string query)
 			{
-				SearchResult findPaulResult = db.FT().Search(
-							 name, query != "" ? (new Query(query)).Limit(0, 10000) : (new Query()).Limit(0, 10000));
-				var data = findPaulResult.Documents.Select(x => x["json"]);
-				return data;
+				if(name== "idx:messages")
+				{
+                    SearchResult findPaulResult = db.FT().Search(
+                             name, query != "" ? (new Query(query)).Limit(0, 10000).SetSortBy("timestamp") : (new Query()).Limit(0, 10000).SetSortBy("timestamp"));
+                    var data = findPaulResult.Documents.Select(x => x["json"]);
+                    return data;
+                }
+				else
+				{
+                    SearchResult findPaulResult = db.FT().Search(
+                             name, query != "" ? (new Query(query)).Limit(0, 10000) : (new Query()).Limit(0, 10000));
+                    var data = findPaulResult.Documents.Select(x => x["json"]);
+                    return data;
+                }
+				
 			}
 			public IEnumerable<RedisResult> FTSelectOne(string name, string query, string slect)
 			{
@@ -208,6 +210,7 @@ namespace ChatAppRealTime
 				{
 					from = from,
 					date = DateTime.Now,
+					timestamp = DateTime.Now.Ticks,
 					message = message
 				};
 				bool chatroomSet = db.JSON().Set($"message:{this["message:"]}", "$", chatroom);
