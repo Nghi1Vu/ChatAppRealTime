@@ -4,8 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatAppRealTime"
-        mc:Ignorable="d"   xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
- xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
+        mc:Ignorable="d"  
                              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
        Title="Tổng hợp Emoji" Height="450" Width="300">
     <WrapPanel >

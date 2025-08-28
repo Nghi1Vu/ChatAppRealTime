@@ -24,7 +24,7 @@ namespace ChatAppRealTime
 	/// <summary>
 	/// Interaction logic for ChatRoom.xaml
 	/// </summary>
-	public partial class ChatRoom : AdonisUI.Controls.AdonisWindow
+	public partial class ChatRoom : Window
 	{
 		private List<string> lstonline;
 		public ChatRoom()

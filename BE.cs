@@ -212,7 +212,7 @@ namespace ChatAppRealTime
 					date = DateTime.Now,
 					timestamp = DateTime.Now.Ticks,
 					message = message
-				};
+				};	
 				bool chatroomSet = db.JSON().Set($"message:{this["message:"]}", "$", chatroom);
 
 				return chatroomSet;

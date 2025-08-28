@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="img\chatbot.jpg" />
+    <None Remove="img\index.jpg" />
     <None Remove="img\OIP.jpg" />
   </ItemGroup>
 
@@ -20,18 +21,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AdonisUI" Version="1.17.1" />
-    <PackageReference Include="AdonisUI.ClassicTheme" Version="1.17.1" />
     <PackageReference Include="Emoji.Wpf" Version="0.3.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NRedisStack" Version="0.13.1" />
     <PackageReference Include="OpenAI" Version="2.1.0" />
+    <PackageReference Include="WPF-UI" Version="4.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="img\chatbot.jpg">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\index.jpg">
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </Resource>
     <Resource Include="img\OIP.jpg" />

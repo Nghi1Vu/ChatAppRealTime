@@ -31,7 +31,7 @@ namespace ChatAppRealTime
     /// <summary>
     /// Interaction logic for ChatRoom.xaml
     /// </summary>
-    public partial class ChatAi : AdonisUI.Controls.AdonisWindow
+    public partial class ChatAi : Window
     {
         string modelai = "meta-llama/Llama-3.3-70B-Instruct-Turbo";
         string key_session { get; set; }

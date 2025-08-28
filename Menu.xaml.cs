@@ -1,5 +1,4 @@
-﻿using AdonisUI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,13 +47,13 @@ namespace ChatAppRealTime
 
 		private void DarkModeToggle_Checked(object sender, RoutedEventArgs e)
 		{
-			AdonisUI.ResourceLocator.SetColorScheme(Application.Current.Resources, ResourceLocator.DarkColorScheme);
+			//AdonisUI.ResourceLocator.SetColorScheme(Application.Current.Resources, ResourceLocator.DarkColorScheme);
 
 		}
 
 		private void DarkModeToggle_Unchecked(object sender, RoutedEventArgs e)
 		{
-			AdonisUI.ResourceLocator.SetColorScheme(Application.Current.Resources, ResourceLocator.LightColorScheme);
+			//AdonisUI.ResourceLocator.SetColorScheme(Application.Current.Resources, ResourceLocator.LightColorScheme);
 
 		}
 
