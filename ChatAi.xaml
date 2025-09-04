@@ -1,4 +1,4 @@
-﻿<Window x:Class="ChatAppRealTime.ChatAi"
+﻿<Page x:Class="ChatAppRealTime.ChatAi"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,6 +6,12 @@
         xmlns:local="clr-namespace:ChatAppRealTime"
         mc:Ignorable="d"  
         Title="Bot" Height="450" Width="800">
+    <Page.Background>
+        <SolidColorBrush Color="White" />
+    </Page.Background>
+    <Page.Foreground>
+        <SolidColorBrush Color="Black" />
+    </Page.Foreground>
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -15,7 +21,6 @@
             <RowDefinition Height="0.1*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:Menu Panel.ZIndex="1000" />
         <Button Name="changeModel" Click="changeModel_Click" Panel.ZIndex="1" Grid.Row="1" Width="80" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5">Model</Button>
         <!-- Popup chứa ComboBox -->
         <Popup x:Name="chooseModel" Placement="MousePoint" StaysOpen="False">
@@ -67,4 +72,4 @@
         </Grid>
     </Grid>
   
-</Window>
+</Page>

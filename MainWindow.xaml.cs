@@ -93,8 +93,8 @@ namespace ChatAppRealTime
             _timer.Elapsed += async (sender, e) => await Constant.RedisServerIni.Heartbeat(Constant.RedisServerIni.currentusr);
             _timer.AutoReset = true;
             _timer.Start();
-            ChatRoom room = new ChatRoom();
-            room.Show();
+            Menu menu = new Menu();
+            menu.Show();
             this.Close();
 
             //end
@@ -131,6 +131,8 @@ namespace ChatAppRealTime
                     return;
                 }
                 await OnOpenCustomMessageBox($"Đăng ký thành công. Xin chào: " + txtac.Text);
+                MainWindow main = new MainWindow(false);
+                main.Show();
                 this.Close();
             }
             else

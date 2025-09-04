@@ -31,5 +31,14 @@ namespace ChatAppRealTime
 		{
 
 		}
-	}
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is Window win)
+            {
+                win.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
+        }
+
+    }
 }

@@ -12,7 +12,7 @@
 
                 <!-- Load Wpf.Ui theme -->
             </ResourceDictionary.MergedDictionaries>
-
+           
         </ResourceDictionary>
             
     </Application.Resources>

@@ -12,33 +12,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Wpf.Ui.Abstractions.Controls;
 
 namespace ChatAppRealTime
 {
 	/// <summary>
 	/// Interaction logic for NavBar.xaml
 	/// </summary>
-	public partial class Menu : UserControl
-	{
+	public partial class Menu : Window
+    {
 
 		public Menu()
 		{
 			InitializeComponent();
-		}
+        }
 
-		private void Home_Click(object sender, RoutedEventArgs e)
-		{
-			ChatRoom chatRoom = new ChatRoom();
-			chatRoom.Show();
-			Window.GetWindow(this).Close();
-		}
-
-		private void AIChat_Click(object sender, RoutedEventArgs e)
-		{
-			ChatAi chatAi= new ChatAi();
-			chatAi.Show();
-			Window.GetWindow(this).Close();
-		}
 
 		private void Settings_Click(object sender, RoutedEventArgs e)
 		{
@@ -67,7 +55,6 @@ namespace ChatAppRealTime
 		{
 			MainWindow mainWindow = new MainWindow();
 			mainWindow.Show();
-			Window.GetWindow(this).Close();
 		}
 	}
 }

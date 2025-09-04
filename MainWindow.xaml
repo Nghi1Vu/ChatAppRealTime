@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                               xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        xmlns:local="clr-namespace:ChatAppRealTime"
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="1050" Width="1400" KeyUp="AdonisWindow_KeyUp">
+        xmlns:local="clr-namespace:ChatAppRealTime" 
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" Height="1050" Width="1400"
+        Title="MainWindow"  KeyUp="AdonisWindow_KeyUp">
     <Window.Background>
         <ImageBrush ImageSource="pack://application:,,,/ChatAppRealTime;component/img/index.jpg" />
     </Window.Background>
